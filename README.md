@@ -53,8 +53,9 @@ assets/js/app.js                  ← 100% JS tuỳ chỉnh, chia 10 phần có 
 assets/js/config.example.js       ← mẫu cấu hình; bản thật do build.sh sinh, không commit
 assets/img/avatar.jpg             ← avatar tròn ở hero — 512×512, 52 KB
 assets/img/Certification_1..4.png ← 4 chứng chỉ Anthropic
-assets/img/og-cover.svg           ← ảnh Open Graph
+assets/img/og-cover.png           ← ảnh Open Graph — 1200×630, chụp từ tools/og-cover.html
 assets/img/favicon.svg            ← icon tab trình duyệt (logo chữ T)
+tools/og-cover.html               ← file nguồn dựng ra og-cover.png; build.sh xoá trước khi deploy
 build.sh                          ← sinh config.js từ W3F_KEY lúc deploy
 _headers  /  _redirects           ← cấu hình Cloudflare Pages
 README.md
@@ -191,7 +192,7 @@ Số điện thoại hiển thị theo dạng nhóm `0936 864 438` cho dễ đ�
 
 | Cần sửa | Ở đâu |
 |---|---|
-| Ảnh Open Graph | `assets/img/og-cover.svg` đã mang thương hiệu Tân Phạm, nhưng nên xuất lại thành **PNG/JPG 1200×630** rồi sửa `og:image` (dòng `34`) cho khớp đuôi file — nhiều mạng xã hội không đọc được SVG |
+| Ảnh Open Graph | Sửa chữ trong `tools/og-cover.html` rồi **chụp lại** ra `assets/img/og-cover.png` — xem mục 12, phần "Ảnh Open Graph" |
 | Năm bản quyền | tự cập nhật bằng JS (`app.js`, mục 8); không cần sửa tay |
 | Ghi chú "Nhận số lượng hạng mục có giới hạn mỗi tháng" (dòng `201`) | đổi hoặc bỏ nếu không đúng thực tế |
 
@@ -588,13 +589,49 @@ tại kịch bản đó, đồng thời có POP tại TP.HCM và Hà Nội nên 
 
 ### Ảnh Open Graph
 
-`assets/img/og-cover.png` — **1200×630, 29 KB**, đúng cỡ Facebook, Zalo và LinkedIn khuyến nghị.
+`assets/img/og-cover.png` — **1200×630, 169 KB**, đúng cỡ Facebook, Zalo và LinkedIn khuyến nghị.
 
 Bản SVG cũ đã gỡ: phần lớn mạng xã hội **không đọc được SVG**, chia sẻ link sẽ ra thẻ trắng
-không ảnh. Ảnh mới vẽ bằng GDI+ (script trong lịch sử phiên làm việc), dùng font Segoe UI vì
-Public Sans không cài sẵn trên máy — ảnh tĩnh nên không ảnh hưởng gì.
+không ảnh.
 
 Kèm theo `og:image:type` và `og:image:alt` để Facebook và Zalo dựng thẻ xem trước chính xác hơn.
 
-**Đổi ảnh này:** thay `og-cover.png` bằng file PNG/JPG khác đúng **1200×630**. Sai tỉ lệ thì
-Facebook tự cắt, thường cắt mất chữ.
+#### File nguồn
+
+Ảnh này **không vẽ tay bằng trình đồ hoạ**. Nó là ảnh chụp màn hình của
+`tools/og-cover.html` — một trang HTML 1200×630 dùng đúng màu `--tp-primary`, đúng font
+Public Sans và đúng logo chữ T của site. Sửa chữ trong file HTML dễ hơn nhiều so với mở
+lại file thiết kế, nên **đừng sửa file PNG trực tiếp**: lần chụp sau sẽ ghi đè mất.
+
+**Sửa chữ xong phải chụp lại**, nếu không ảnh PNG vẫn là nội dung cũ:
+
+```sh
+chrome --headless --disable-gpu --hide-scrollbars \
+       --force-device-scale-factor=1 --window-size=1200,630 \
+       --screenshot=assets/img/og-cover.png \
+       tools/og-cover.html
+```
+
+Trên Windows thay `chrome` bằng đường dẫn đầy đủ tới `chrome.exe`, và viết đường dẫn
+`--screenshot` **tuyệt đối** — Chrome giải đường dẫn đó theo thư mục làm việc của chính nó
+chứ không theo thư mục bạn đang đứng, đứng sai chỗ là gặp lỗi `Access is denied`.
+
+Ba chỗ dễ vấp:
+
+- **Lúc chụp phải có mạng.** Font Public Sans tải từ Google Fonts. Mất mạng thì Chrome lặng
+  lẽ thay bằng font hệ thống, ảnh trông vẫn "được" nên rất dễ chụp nhầm rồi commit. Chụp
+  xong hãy mở ảnh ra nhìn.
+- **`text-wrap: balance` làm mất hẳn chữ** khi chụp headless. Muốn ngắt dòng cân đối thì đặt
+  `<br>` thủ công như dòng tagline trong file.
+- **Đổi 1200×630 thì đổi cả `og:image:width` / `og:image:height`** trong `index.html`. Sai tỉ
+  lệ thì Facebook tự cắt, thường cắt mất chữ.
+
+File nguồn **không được deploy**: `build.sh` xoá cả thư mục `tools/` trước khi Cloudflare
+Pages nhận thư mục xuất bản. Nếu để nguyên thì `/tools/og-cover.html` trở thành một địa chỉ
+truy cập được, khách gõ trúng sẽ thấy một trang lạ và Google có thể lập chỉ mục nó. Xoá hẳn
+chứ không dùng `_redirects`, vì `_redirects` chỉ đổi hướng — file vẫn nằm trên máy chủ.
+
+Ảnh nặng 169 KB chứ không phải 29 KB như bản chữ-không-ảnh trước đây, do có ảnh chụp thật
+bên trong mà PNG nén ảnh chụp không hiệu quả. Vẫn thoải mái trong ngưỡng của Facebook và
+Zalo. Muốn nhẹ hơn thì phải chuyển sang JPEG, kéo theo đổi `og:image` và `og:image:type`
+trong `index.html`.

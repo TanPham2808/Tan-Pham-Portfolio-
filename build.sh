@@ -44,3 +44,14 @@ fi
 SITE=$(printf '%s' "$SITE" | sed 's#/$##')   # bo dau / o cuoi neu co
 sed -i "s#__SITE_URL__#${SITE}#g" index.html
 echo "OK: ten mien dung cho the OG/canonical = ${SITE}"
+
+# ---------- 3. Bo cac file chi dung de lam viec -------------------------------
+# tools/ chua file nguon dung ra anh Open Graph (tools/og-cover.html). No la
+# ban thiet ke, khong phai mot trang cua site. De nguyen thi Cloudflare Pages
+# van phuc vu no tai /tools/og-cover.html: khach go trung dia chi se thay mot
+# trang la, va Google co the lap chi muc trang do.
+#
+# Xoa han o day chu khong dung _redirects: _redirects chi doi huong, file van
+# nam tren may chu. Xoa thi no khong bao gio duoc tai len.
+rm -rf tools
+echo "OK: da bo thu muc tools/ khoi ban deploy"

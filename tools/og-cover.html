@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8">
+
+  <!-- ===========================================================================
+       og-cover.html — FILE NGUỒN của assets/img/og-cover.png
+
+       Ảnh Open Graph là ảnh Facebook/Zalo hiện khi ai đó chia sẻ link. Nó phải
+       là file PNG tĩnh, nhưng dựng bằng HTML thì sửa chữ dễ hơn nhiều so với mở
+       trình đồ hoạ. File này chính là bản thiết kế đó; ảnh PNG chỉ là kết quả
+       chụp màn hình của nó.
+
+       SỬA CHỮ XONG PHẢI CHỤP LẠI, nếu không ảnh PNG vẫn là nội dung cũ:
+
+         chrome --headless --disable-gpu --hide-scrollbars \
+                --force-device-scale-factor=1 --window-size=1200,630 \
+                --screenshot=assets/img/og-cover.png \
+                tools/og-cover.html
+
+       (Trên Windows thay `chrome` bằng đường dẫn đầy đủ tới chrome.exe. Đường
+       dẫn --screenshot nên viết tuyệt đối, Chrome giải nó theo thư mục làm việc
+       của chính nó chứ không theo thư mục bạn đang đứng.)
+
+       Vài điểm đã vấp, đừng vấp lại:
+       · Kích thước 1200x630 là bắt buộc, khớp với og:image:width/height trong
+         index.html. Đổi số ở đây thì đổi cả hai chỗ kia.
+       · Font Public Sans tải từ Google Fonts nên lúc chụp PHẢI CÓ MẠNG. Mất
+         mạng thì Chrome lặng lẽ thay bằng font hệ thống, ảnh trông vẫn "được"
+         nên rất dễ chụp nhầm rồi commit. Chụp xong hãy mở ảnh ra nhìn.
+       · `text-wrap: balance` làm mất hẳn chữ khi chụp headless — đừng dùng.
+         Muốn ngắt dòng cân đối thì đặt <br> thủ công như dòng tagline bên dưới.
+       · File này KHÔNG được deploy: build.sh xoá cả thư mục tools/ trước khi
+         Cloudflare Pages nhận thư mục xuất bản.
+       =========================================================================== -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=block">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Khung ảnh — trùng với og:image:width / og:image:height */
+    html,
+    body {
+      width: 1200px;
+      height: 630px;
+    }
+
+    body {
+      font-family: 'Public Sans', 'Segoe UI', system-ui, sans-serif;
+      background: #8b3dff;
+      /* --tp-primary */
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* --- Hai khối tròn trang trí: một ở trên phải, một ló ra ở dưới trái --- */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .07);
+    }
+
+    .blob-tr {
+      width: 660px;
+      height: 660px;
+      top: -105px;
+      right: -175px;
+    }
+
+    .blob-bl {
+      width: 380px;
+      height: 380px;
+      bottom: -150px;
+      left: -130px;
+    }
+
+    /* --- Cột nội dung bên trái ---
+       Rộng 660px, chừa phần phải cho ảnh đại diện. Nới rộng cột này là chữ
+       sẽ chạy vào dưới ảnh. */
+    .content {
+      position: absolute;
+      left: 88px;
+      top: 0;
+      width: 660px;
+      height: 630px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .brandline {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      margin-bottom: 52px;
+    }
+
+    /* Logo vẽ thẳng bằng SVG nội tuyến, KHÔNG dùng <img src="favicon.svg">:
+       favicon là chữ trắng trên nền tím, ở đây cần đảo lại thành nền trắng
+       chữ tím cho nổi trên nền tím của ảnh. */
+    .brandline svg {
+      width: 58px;
+      height: 58px;
+      display: block;
+    }
+
+    .brandline span {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 3.4px;
+      color: #fff;
+      text-transform: uppercase;
+    }
+
+    .name {
+      font-size: 78px;
+      font-weight: 700;
+      line-height: 1.06;
+      color: #fff;
+      letter-spacing: -1px;
+    }
+
+    .stack {
+      margin-top: 12px;
+      font-size: 31px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, .95);
+      letter-spacing: -.2px;
+    }
+
+    .tagline {
+      margin-top: 22px;
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, .9);
+      max-width: 560px;
+    }
+
+    .rule {
+      margin-top: 52px;
+      width: 300px;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, .45);
+    }
+
+    /* --- Ảnh đại diện bên phải ---
+       Dùng background thay <img> để cắt tròn và chỉnh khuôn mặt bằng
+       background-size/position mà không phải đụng tới file ảnh gốc.
+       background-position 50% 34% kéo khuôn mặt lên giữa vòng tròn;
+       thay avatar.jpg khác thì phải chỉnh lại hai số này. */
+    .avatar {
+      position: absolute;
+      top: 50%;
+      right: 84px;
+      transform: translateY(-50%);
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background-image: url('../assets/img/avatar.jpg');
+      background-size: 132%;
+      background-position: 50% 34%;
+      box-shadow:
+        0 0 0 9px rgba(255, 255, 255, .92),
+        /* vành trắng */
+        0 0 0 20px rgba(255, 255, 255, .16),
+        /* quầng sáng mờ */
+        0 26px 60px rgba(35, 0, 85, .34);
+      /* bóng đổ */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="blob blob-tr"></div>
+  <div class="blob blob-bl"></div>
+
+  <div class="content">
+    <div class="brandline">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Tân Phạm">
+        <path d="M9 0h14a9 9 0 0 1 9 9v20.5a2.5 2.5 0 0 1-2.5 2.5H9a9 9 0 0 1-9-9V9a9 9 0 0 1 9-9Z" fill="#ffffff" />
+        <rect x="7.4" y="8.2" width="17.2" height="4.6" rx="1.8" fill="#8b3dff" />
+        <rect x="13.7" y="8.2" width="4.6" height="15.6" rx="1.8" fill="#8b3dff" />
+      </svg>
+      <span>Freelance Software Engineer</span>
+    </div>
+
+    <div class="name">Tân Phạm</div>
+    <div class="stack">Backend · AI Automation · DevOps</div>
+
+    <!-- <br> đặt tay để hai dòng dài gần bằng nhau. Bỏ nó ra thì dòng dưới chỉ
+         còn đúng chữ "hệ thống." đứng trơ một mình, nhìn hụt. -->
+    <p class="tagline">Phát triển, tích hợp AI và duy trì<br>độ ổn định của toàn bộ hệ thống.</p>
+
+    <div class="rule"></div>
+  </div>
+
+  <div class="avatar"></div>
+</body>
+
+</html>
