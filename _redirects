@@ -1,3 +1,8 @@
-# Gom www ve ten mien goc de tranh trung lap noi dung khi Google lap chi muc.
-# Can them ca hai ten mien trong Cloudflare Pages > Custom domains.
-https://www.tanpham.info/* https://tanpham.info/:splat 301!
+# Khi ban da mua ten mien rieng: bo dau # o dong cuoi, thay tanpham.info
+# bang ten mien that, va nho them CA HAI ten mien (goc + www) trong
+# Cloudflare Pages > Custom domains. Muc dich la gom www ve ten mien goc
+# de Google khong lap chi muc hai dia chi cho cung mot noi dung.
+#
+# Chua mua ten mien thi khong can dong nay: dia chi *.pages.dev khong co www.
+#
+# https://www.tanpham.info/* https://tanpham.info/:splat 301!

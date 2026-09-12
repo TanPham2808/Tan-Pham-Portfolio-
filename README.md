@@ -538,6 +538,22 @@ Tạo project mới → **Connect to Git** → chọn repo `Tan-Pham-Portfolio-`
 |---|---|
 | `W3F_KEY` | access key lấy từ <https://web3forms.com> |
 
+### Tên miền trong thẻ OG và canonical
+
+`index.html` **không gắn cứng tên miền**. Ba chỗ `canonical`, `og:url`, `og:image` dùng
+placeholder `__SITE_URL__`, và `build.sh` điền vào lúc deploy theo thứ tự ưu tiên:
+
+| Thứ tự | Nguồn | Khi nào dùng |
+|---|---|---|
+| 1 | `SITE_URL` | bạn tự đặt, sau khi đã mua tên miền riêng |
+| 2 | `CF_PAGES_URL` | Cloudflare tự inject — chính là địa chỉ `*.pages.dev` |
+
+Thiếu cả hai thì **build dừng**. Lý do: nếu để sót `__SITE_URL__` trong `og:image`, link chia
+sẻ lên Facebook và Zalo sẽ không hiện ảnh, mà lỗi này không thấy được khi xem site bình thường.
+
+Nhờ vậy deploy lên `*.pages.dev` là thẻ OG tự đúng ngay, không phải sửa gì. Sau này mua tên
+miền thì chỉ cần thêm biến `SITE_URL` — không đụng vào mã nguồn.
+
 ### Trỏ tên miền
 
 **Custom domains** → thêm **cả hai**: `tanpham.info` và `www.tanpham.info`.
@@ -554,7 +570,7 @@ Cloudflare Pages đọc hai file này và **không phục vụ chúng như nội
 | File | Việc nó làm |
 |---|---|
 | `_headers` | header bảo mật (`nosniff`, `Referrer-Policy`, `X-Frame-Options`) + quy tắc cache |
-| `_redirects` | chuyển `www.tanpham.info` → `tanpham.info` bằng mã 301 |
+| `_redirects` | gom `www` về tên miền gốc — **đang tắt**, bật khi đã mua tên miền riêng |
 
 **Về cache:** tên file CSS/JS không có hash nên chỉ cache 1 giờ — nếu để dài, sửa `theme.css`
 xong khách vẫn dùng bản cũ hàng tuần. HTML đặt `must-revalidate` để nội dung mới hiện ngay.
