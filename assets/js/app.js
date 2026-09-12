@@ -5,6 +5,7 @@
    3) Sticky navbar                          7) Validate form liên hệ
    4) Nút cuộn về đầu trang                  8) Năm hiện tại ở chân trang
                                              9) Chuyển giao diện sáng / tối
+                                            10) Xem ảnh chứng chỉ phóng to
    ========================================================================== */
 (function () {
   'use strict';
@@ -339,9 +340,41 @@
     }
   }
 
+  /* ----------------------------------------------------------------------
+     10) XEM ẢNH CHỨNG CHỈ PHÓNG TO
+         Một modal dùng chung cho cả 4 ảnh; nội dung điền theo nút được bấm.
+     ---------------------------------------------------------------------- */
+  function initCertModal() {
+    var modal = document.getElementById('tpCertModal');
+    if (!modal) { return; }
+
+    var img   = document.getElementById('tpCertModalImg');
+    var label = document.getElementById('tpCertModalLabel');
+
+    modal.addEventListener('show.bs.modal', function (e) {
+      var trigger = e.relatedTarget;
+      if (!trigger || !img) { return; }
+
+      var src   = trigger.getAttribute('data-cert-src');
+      var title = trigger.getAttribute('data-cert-title') || 'Chứng chỉ';
+      var thumb = trigger.querySelector('img');
+
+      img.setAttribute('src', src);
+      // Mượn lại alt của ảnh nhỏ để không mô tả trùng lặp hai nơi
+      img.setAttribute('alt', thumb ? thumb.getAttribute('alt') : title);
+      if (label) { label.textContent = title; }
+    });
+
+    // Trả ảnh về rỗng khi đóng để lần mở sau không chớp ảnh cũ
+    modal.addEventListener('hidden.bs.modal', function () {
+      if (img) { img.setAttribute('src', ''); img.setAttribute('alt', ''); }
+    });
+  }
+
   /* ---------------------------------------------------------------------- */
   function init() {
     initThemeToggle();
+    initCertModal();
     initScrollCue();
     initScrollState();
     initAnchors();

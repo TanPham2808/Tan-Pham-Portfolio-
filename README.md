@@ -228,23 +228,21 @@ Muốn đổi hình chữ T thì sửa đồng thời ba chỗ: navbar, footer v
 
 ## 6. Ảnh đại diện
 
-Ảnh gốc `assets/img/TanPham.JPG` là ảnh dọc **1957×3480**, chủ thể đứng lệch hẳn về bên trái
-khung. Để `object-fit: cover` tự cắt sẽ đưa khuôn mặt ra khỏi tâm hình tròn, nên site dùng
-`assets/img/avatar.jpg` — bản cắt vuông 720×720 xuất sẵn từ ảnh gốc.
+Site hiển thị `assets/img/avatar.jpg` — bản cắt vuông **512×512** xuất sẵn từ ảnh gốc, vì để
+`object-fit: cover` tự cắt ảnh dọc sẽ đưa khuôn mặt lệch khỏi tâm hình tròn.
 
-**Tham số cắt hiện tại:** `x 0…1850, y 519…2369` của ảnh gốc → đầu chiếm khoảng **62%** chiều
-cao khung (bản đầu tiên cắt `1600` cho ra 72%, nhìn quá cận mặt).
+| | Giá trị |
+|---|---|
+| Ảnh nguồn | `assets/img/avatar2.jpg` (1779×3161) |
+| Vùng cắt | `x 385…965, y 1001…1581` |
+| Kết quả | 512×512, đầu chiếm khoảng **53%** chiều cao khung |
 
-### Giới hạn do chính ảnh gốc
+Trong ảnh này chủ thể nằm gần giữa khung nên cắt được **cân cả hai chiều**. Ảnh cũ
+`TanPham.JPG` (1957×3480) vẫn giữ lại nhưng không còn dùng: ở đó chủ thể lệch hẳn sang trái,
+khung càng rộng thì mặt càng lệch, không thể vừa rộng vừa cân.
 
-Trong ảnh gốc, tâm khuôn mặt nằm ở khoảng `x = 635`. Muốn cắt vuông cạnh `S` mà mặt vẫn đúng
-giữa thì phải bắt đầu từ `x = 635 − S/2`, tức chỉ làm được khi `S ≤ 1270` — lúc đó đầu chiếm
-tới 91% khung, cận hơn cả bản cũ. Nói cách khác: **khung càng rộng thì mặt càng lệch trái, và
-không thể vừa rộng vừa cân**. Cạnh tối đa là `1957` (bằng chiều rộng ảnh); vượt qua sẽ lòi
-viền đen.
-
-Bản hiện tại là điểm cân bằng: đủ rộng để hết cận, mặt lệch trái vừa phải và vẫn nằm gọn trong
-hình tròn. Muốn mặt vào đúng giữa thì cần **một tấm ảnh khác có chủ thể ở giữa khung**.
+**Vì sao xuất 512 chứ không phải 720:** vùng cắt gốc chỉ 500×500. Phóng lên 720 là nhân 1,44
+lần, ảnh sẽ nhoè. Avatar hiển thị ở 160px nên 512 đã phủ đủ màn hình 3× DPI.
 
 ### Đổi ảnh khác
 
@@ -267,6 +265,34 @@ Ba thẻ dịch vụ dùng thêm class `.tp-card-service` (`theme.css`, mục 7)
 | Hover | nâng `-6px` + `--tp-shadow-lg` + viền chuyển sang màu thương hiệu + ô icon phóng `1.06` |
 
 Icon ba khối: `bi-hdd-network`, `bi-robot`, `bi-boxes`.
+
+### Khối chứng chỉ (nằm trong section `#the-manh`)
+
+Hai phần, đặt sau hai badge nghiệp vụ:
+
+| Phần | Nội dung |
+|---|---|
+| 3 thẻ `.tp-cert-card` | tổng quan theo nguồn cấp — Azure ×3, Google Education ×1, Anthropic ×4 |
+| Lưới `.tp-cert-thumb` | 4 ảnh chứng chỉ Anthropic, bấm mở modal xem cỡ đầy đủ |
+
+Số thẻ và ảnh mỗi hàng: **1/2** ở 375px · **2/2** ở 768px · **3/4** từ `lg`.
+
+**Về icon thương hiệu:** `bi-microsoft` và `bi-google` là glyph có sẵn trong bộ Bootstrap Icons
+(giấy phép MIT) đang dùng cho cả site — không phải logo chính thức của Microsoft hay Google.
+Anthropic không có glyph trong bộ này nên dùng `bi-stars` trung tính. Muốn dùng huy hiệu
+chính thức thì tải từ chính nơi cấp (Microsoft phát hành qua Credly) và thay thẻ `<i>` bằng
+`<img>` — đừng vẽ lại logo, vì đó là nhãn hiệu được bảo hộ.
+
+**Thẻ tổng quan chỉ có icon, tên nguồn cấp và một dòng mô tả** — không hiện số lượng chứng chỉ.
+Con số duy nhất còn lại nằm ở tiêu đề "Tám chứng chỉ từ ba nền tảng"; sửa số đó thì sửa thẳng
+trong `<h3 class="h2">` của khối.
+
+**Thêm ảnh chứng chỉ mới:** copy một khối `<li class="col">` trong lưới rồi đổi `data-cert-src`,
+`data-cert-title` và `alt` — `app.js` mục 10 tự lo phần modal, không cần sửa JS.
+
+Modal dùng chung một thẻ `#tpCertModal` cho cả 4 ảnh; nội dung điền theo nút được bấm qua
+`show.bs.modal`, và `src` được xoá khi đóng để lần mở sau không chớp ảnh cũ. Thumbnail là
+`<button>` thật nên bấm được bằng bàn phím.
 
 ### Mỗi khối một màu riêng
 

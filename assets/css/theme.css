@@ -279,6 +279,7 @@ h3, .h3 {
   .py-lg-9 { padding-top: var(--tp-section-space) !important; padding-bottom: var(--tp-section-space) !important; }
   .pt-lg-9 { padding-top: var(--tp-section-space) !important; }
   .pb-lg-9 { padding-bottom: var(--tp-section-space) !important; }
+  .mt-lg-6 { margin-top: 4rem !important; }   /* Bootstrap dừng ở bậc 5 = 3rem */
 }
 
 .tp-section-alt { background-color: var(--tp-section-bg); }
@@ -865,6 +866,105 @@ div[id] { scroll-margin-top: var(--tp-navbar-h); }
   font-weight: 600;
 }
 
+/* ----- Chứng chỉ ---------------------------------------------------------- */
+/* Thẻ tổng quan theo từng nguồn cấp */
+.tp-cert-card {
+  height: 100%;
+  padding: 1.75rem 1.5rem;
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius-xl);
+  background-color: var(--tp-surface);
+  box-shadow: var(--tp-shadow-sm);
+  text-align: center;
+  transition: transform .3s var(--tp-ease),
+              border-color .3s var(--tp-ease),
+              box-shadow .3s var(--tp-ease);
+}
+.tp-cert-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--tp-primary-border);
+  box-shadow: var(--tp-shadow-md);
+}
+
+.tp-cert-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: .875rem;
+  border: 1px solid var(--tp-primary-border);
+  border-radius: 50%;
+  background-color: var(--tp-primary-subtle);
+  color: var(--tp-accent);
+  font-size: 1.375rem;
+}
+
+.tp-cert-card h4 {
+  margin-bottom: .5rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--tp-heading);
+}
+.tp-cert-card p:last-child { margin-bottom: 0; font-size: .9375rem; }
+
+/* Lưới ảnh chứng chỉ — bấm để phóng to */
+.tp-cert-grid-title {
+  margin-bottom: 1rem;
+  font-size: .875rem;
+  /* --tp-muted chỉ dùng cho chi tiết trang trí; đây là chữ đọc được nên phải
+     dùng --tp-body-color mới đạt 4.5:1 */
+  color: var(--tp-body-color);
+}
+
+.tp-cert-thumb {
+  display: block;
+  width: 100%;
+  padding: .5rem;
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius-lg);
+  background-color: var(--tp-surface);
+  cursor: zoom-in;
+  text-align: center;
+  transition: transform .3s var(--tp-ease),
+              border-color .3s var(--tp-ease),
+              box-shadow .3s var(--tp-ease);
+}
+.tp-cert-thumb:hover,
+.tp-cert-thumb:focus-visible {
+  transform: translateY(-4px);
+  border-color: var(--tp-primary-border);
+  box-shadow: var(--tp-shadow-md);
+}
+
+.tp-cert-thumb img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--tp-radius);
+}
+
+.tp-cert-name {
+  display: block;
+  margin-top: .625rem;
+  margin-bottom: .125rem;
+  font-size: .8125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--tp-heading);
+}
+
+/* Bootstrap khai báo --bs-modal-* ngay trên .modal nên phải ghi đè tại đó */
+.tp-cert-modal {
+  --bs-modal-bg: var(--tp-surface);
+  --bs-modal-color: var(--tp-body-color);
+  --bs-modal-border-color: var(--tp-border);
+  --bs-modal-header-border-color: var(--tp-border);
+  --bs-modal-border-radius: var(--tp-radius-xl);
+}
+.tp-cert-modal .modal-title { color: var(--tp-heading); }
+.tp-cert-modal .modal-body img { width: 100%; height: auto; }
+
 /* --------------------------------------------------------------------------
    8) FORM LIÊN HỆ
    -------------------------------------------------------------------------- */
@@ -1065,6 +1165,9 @@ div[id] { scroll-margin-top: var(--tp-navbar-h); }
   .btn:hover,
   .tp-card:hover,
   .tp-step:hover,
+  .tp-cert-card:hover,
+  .tp-cert-thumb:hover,
+  .tp-cert-thumb:focus-visible,
   .tp-navbar .tp-nav-cta:hover { transform: none; }
 
   .tp-to-top { transform: none; }
