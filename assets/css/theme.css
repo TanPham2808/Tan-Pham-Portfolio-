@@ -438,9 +438,27 @@ div[id] { scroll-margin-top: var(--tp-navbar-h); }
   box-shadow: var(--tp-shadow-sm);
   animation: tpSlideDown .3s var(--tp-ease) both;
 }
+
+/* Hiệu ứng trượt xuống dùng `top`, KHÔNG dùng `transform`.
+   Lý do không phải thẩm mỹ mà là một cái bẫy của CSS:
+
+   Phần tử có `transform` khác `none` trở thành containing block cho MỌI con
+   `position: fixed` của nó. Panel offcanvas (#tpMenu) nằm bên trong navbar và
+   Bootstrap đặt nó `position: fixed; height: 100%`. Nếu navbar mang transform
+   thì `100%` được tính theo chiều cao navbar (88px) chứ không theo viewport —
+   trên mobile, cuộn xuống rồi mở menu sẽ chỉ thấy đúng dải tiêu đề 88px, phần
+   còn lại biến mất sau lớp nền mờ. Nhìn y như "menu bấm không mở".
+
+   `animation-fill-mode: both` khiến transform của khung hình cuối bị GIỮ LẠI
+   vĩnh viễn sau khi animation kết thúc, nên bẫy này không chỉ xảy ra trong
+   0.3s chạy hiệu ứng mà kéo dài suốt thời gian navbar còn dính.
+
+   `top` không tạo containing block nên trượt vẫn y hệt mà không dính bẫy.
+   ĐỪNG đổi ngược về translateY. Thêm `filter`, `backdrop-filter`, `perspective`
+   hay `will-change: transform` vào .tp-navbar cũng gây lại đúng lỗi này. */
 @keyframes tpSlideDown {
-  from { transform: translateY(-100%); }
-  to   { transform: translateY(0); }
+  from { top: calc(-1 * var(--tp-navbar-h)); }
+  to   { top: 0; }
 }
 
 .tp-navbar.navbar-stick .navbar-brand { color: var(--tp-heading); }
