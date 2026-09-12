@@ -542,18 +542,22 @@ Tạo project mới → **Connect to Git** → chọn repo `Tan-Pham-Portfolio-`
 ### Tên miền trong thẻ OG và canonical
 
 `index.html` **không gắn cứng tên miền**. Ba chỗ `canonical`, `og:url`, `og:image` dùng
-placeholder `__SITE_URL__`, và `build.sh` điền vào lúc deploy theo thứ tự ưu tiên:
+placeholder `__SITE_URL__`, và `build.sh` điền vào lúc deploy từ biến **`SITE_URL`**.
 
-| Thứ tự | Nguồn | Khi nào dùng |
-|---|---|---|
-| 1 | `SITE_URL` | bạn tự đặt, sau khi đã mua tên miền riêng |
-| 2 | `CF_PAGES_URL` | Cloudflare tự inject — chính là địa chỉ `*.pages.dev` |
+| Biến | Giá trị |
+|---|---|
+| `SITE_URL` | `https://tanpham.pages.dev` — đổi thành tên miền riêng khi đã mua |
 
-Thiếu cả hai thì **build dừng**. Lý do: nếu để sót `__SITE_URL__` trong `og:image`, link chia
-sẻ lên Facebook và Zalo sẽ không hiện ảnh, mà lỗi này không thấy được khi xem site bình thường.
+Thiếu biến này thì **build dừng hẳn**.
 
-Nhờ vậy deploy lên `*.pages.dev` là thẻ OG tự đúng ngay, không phải sửa gì. Sau này mua tên
-miền thì chỉ cần thêm biến `SITE_URL` — không đụng vào mã nguồn.
+> **Tuyệt đối không dùng `CF_PAGES_URL` cho mục đích này.**
+>
+> Tên biến nghe như địa chỉ site, nhưng thực chất nó là địa chỉ riêng của **từng lần deploy**,
+> có tiền tố băm và **đổi sau mỗi lần build** — ví dụ `https://2eb46552.tanpham.pages.dev`.
+>
+> Nhét nó vào `og:url`/`og:image` thì Facebook và Zalo sẽ lưu cache theo địa chỉ băm đó.
+> Deploy lần sau mã băm đổi, bản ghi cũ vẫn còn, và ảnh xem trước kẹt ở bản cũ vĩnh viễn.
+> Đây là lỗi đã thực sự xảy ra ở lần deploy đầu tiên.
 
 ### Trỏ tên miền
 
