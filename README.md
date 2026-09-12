@@ -47,13 +47,16 @@ Mất mạng thì bố cục vẫn còn nhưng mất lưới Bootstrap, icon và
 ## 2. Cấu trúc file
 
 ```
-index.html                 ← toàn bộ nội dung 7 khối
-assets/css/theme.css       ← 100% CSS tuỳ chỉnh, chia 11 phần có đánh số
-assets/js/app.js           ← 100% JS tuỳ chỉnh, chia 9 phần có đánh số
-assets/img/TanPham.JPG     ← ẢNH GỐC bạn cung cấp (1957×3480) — giữ nguyên, không dùng trực tiếp
-assets/img/avatar.jpg      ← bản cắt vuông 720×720 từ ảnh gốc, dùng cho avatar tròn ở hero
-assets/img/og-cover.svg    ← ảnh Open Graph
-assets/img/favicon.svg     ← icon tab trình duyệt (logo chữ T)
+index.html                        ← toàn bộ nội dung, 7 khối
+assets/css/theme.css              ← 100% CSS tuỳ chỉnh, chia 11 phần có đánh số
+assets/js/app.js                  ← 100% JS tuỳ chỉnh, chia 10 phần có đánh số
+assets/js/config.example.js       ← mẫu cấu hình; bản thật do build.sh sinh, không commit
+assets/img/avatar.jpg             ← avatar tròn ở hero — 512×512, 52 KB
+assets/img/Certification_1..4.png ← 4 chứng chỉ Anthropic
+assets/img/og-cover.svg           ← ảnh Open Graph
+assets/img/favicon.svg            ← icon tab trình duyệt (logo chữ T)
+build.sh                          ← sinh config.js từ W3F_KEY lúc deploy
+_headers  /  _redirects           ← cấu hình Cloudflare Pages
 README.md
 ```
 
@@ -172,9 +175,6 @@ Nhịp dọc mỗi section: `py-5` ở mobile → `py-lg-9` (7rem) từ `lg`.
 
 ## 4. Chỗ thay từng placeholder
 
-Tất cả placeholder nằm trong `index.html` (trừ 2 chỗ trong ảnh OG).
-Cách nhanh nhất: dùng Find & Replace toàn file cho từng chuỗi.
-
 **Không còn placeholder nào.** Toàn bộ thương hiệu, nội dung và thông tin liên hệ đã điền xong:
 
 | Thông tin | Giá trị | Vị trí (dòng trong `index.html`) |
@@ -228,27 +228,23 @@ Muốn đổi hình chữ T thì sửa đồng thời ba chỗ: navbar, footer v
 
 ## 6. Ảnh đại diện
 
-Site hiển thị `assets/img/avatar.jpg` — bản cắt vuông **512×512** xuất sẵn từ ảnh gốc, vì để
-`object-fit: cover` tự cắt ảnh dọc sẽ đưa khuôn mặt lệch khỏi tâm hình tròn.
+Site hiển thị `assets/img/avatar.jpg` — **512×512, 52 KB**.
 
-| | Giá trị |
-|---|---|
-| Ảnh nguồn | `assets/img/avatar2.jpg` (1779×3161) |
-| Vùng cắt | `x 385…965, y 1001…1581` |
-| Kết quả | 512×512, đầu chiếm khoảng **53%** chiều cao khung |
+Bản trước đó là PNG **2048×2048 nặng 6,5 MB** nhưng hiển thị ở đúng 160px, chiếm 73% dung
+lượng cả site. Đã chuyển sang JPG chất lượng 88: nhẹ đi **126 lần**, ở 160px không phân biệt
+được bằng mắt.
 
-Trong ảnh này chủ thể nằm gần giữa khung nên cắt được **cân cả hai chiều**. Ảnh cũ
-`TanPham.JPG` (1957×3480) vẫn giữ lại nhưng không còn dùng: ở đó chủ thể lệch hẳn sang trái,
-khung càng rộng thì mặt càng lệch, không thể vừa rộng vừa cân.
+**Quy tắc khi đổi ảnh khác:** dùng **ảnh vuông**, xuất **JPG** cỡ **512×512**, khuôn mặt chiếm
+khoảng 55–65% chiều cao. Đừng để PNG — với ảnh chụp thì PNG không nén mất dữ liệu nên phình
+gấp hàng trăm lần mà không đẹp hơn chút nào ở kích thước này. Đổi ảnh xong nhớ xem lại `alt`
+trong `index.html`.
 
-**Vì sao xuất 512 chứ không phải 720:** vùng cắt gốc chỉ 500×500. Phóng lên 720 là nhân 1,44
-lần, ảnh sẽ nhoè. Avatar hiển thị ở 160px nên 512 đã phủ đủ màn hình 3× DPI.
+Các ảnh nguồn (`TanPham.JPG`, `avatar1.jpg`, `avatar2.jpg`) đã gỡ khỏi thư mục làm việc để
+site nhẹ, nhưng vẫn nằm trong lịch sử Git — lấy lại bằng:
 
-### Đổi ảnh khác
-
-Thay `assets/img/avatar.jpg` bằng một **ảnh vuông** (khuyến nghị từ 720×720, khuôn mặt chiếm
-khoảng 55–65% chiều cao, chừa khoảng trống đều hai bên) rồi sửa `alt` ở dòng `207` của
-`index.html`. Ảnh gốc luôn được giữ nguyên vẹn để cắt lại khi cần.
+```bash
+git checkout 4f20be4 -- assets/img/avatar2.jpg
+```
 
 ---
 
@@ -415,9 +411,8 @@ thư đó, không cần tạo tài khoản.
 
 Chưa có `config.js` thì form **báo lỗi rõ ràng** chứ không giả vờ gửi thành công.
 
-**Khi deploy:** nhớ upload cả `assets/js/config.js` lên hosting. File này không có trong
-repo nên các quy trình deploy tự động kéo từ Git sẽ không mang nó theo — phải thêm bằng biến
-môi trường hoặc upload tay.
+**Khi deploy:** `config.js` do `build.sh` sinh ra từ biến môi trường `W3F_KEY` — xem mục 12.
+Không phải upload tay, và key vẫn không nằm trong repo.
 
 | Mục | Giá trị |
 |---|---|
@@ -511,3 +506,79 @@ Muốn đổi mặc định thành **luôn sáng**, sửa đoạn script trong `
   Cần hỗ trợ no-JS thì bỏ khối `[data-cue] { opacity: 0 }` ở `theme.css` mục 10.
 - `body { overflow-x: hidden }` chỉ là lưới an toàn; đã kiểm tra thực tế **không có** phần tử
   nào tràn khung ở 375 / 768 / 1440px.
+
+---
+
+## 12. Deploy lên Cloudflare Pages
+
+### Vì sao cần `build.sh`
+
+Site không có bước build thật. `build.sh` tồn tại vì đúng một lý do: sinh
+`assets/js/config.js` từ biến môi trường lúc deploy, vì file đó bị `.gitignore` chặn để
+Web3Forms access key không nằm trong repo công khai.
+
+Nếu thiếu `W3F_KEY`, **build cố tình dừng lại với mã lỗi 1**. Đây là lựa chọn có chủ ý: deploy
+thất bại ồn ào dễ phát hiện hơn nhiều so với deploy thành công nhưng form gửi không được mà
+không ai hay.
+
+### Thiết lập trong Cloudflare Pages
+
+Tạo project mới → **Connect to Git** → chọn repo `Tan-Pham-Portfolio-`, rồi điền:
+
+| Ô | Giá trị |
+|---|---|
+| Framework preset | `None` |
+| Build command | `sh build.sh` |
+| Build output directory | `/` |
+| Root directory | *(để trống)* |
+
+**Settings → Environment variables**, thêm cho cả Production và Preview:
+
+| Tên | Giá trị |
+|---|---|
+| `W3F_KEY` | access key lấy từ <https://web3forms.com> |
+
+### Trỏ tên miền
+
+**Custom domains** → thêm **cả hai**: `tanpham.info` và `www.tanpham.info`.
+Cloudflare tự cấp chứng chỉ TLS, không phải làm gì thêm.
+
+Phải thêm cả `www` thì `_redirects` mới gom được về tên miền gốc. Thiếu bước này thì
+`www.tanpham.info` sẽ không phân giải, và Google có thể lập chỉ mục hai địa chỉ cho cùng một
+nội dung.
+
+### Hai file cấu hình
+
+Cloudflare Pages đọc hai file này và **không phục vụ chúng như nội dung trang**:
+
+| File | Việc nó làm |
+|---|---|
+| `_headers` | header bảo mật (`nosniff`, `Referrer-Policy`, `X-Frame-Options`) + quy tắc cache |
+| `_redirects` | chuyển `www.tanpham.info` → `tanpham.info` bằng mã 301 |
+
+**Về cache:** tên file CSS/JS không có hash nên chỉ cache 1 giờ — nếu để dài, sửa `theme.css`
+xong khách vẫn dùng bản cũ hàng tuần. HTML đặt `must-revalidate` để nội dung mới hiện ngay.
+Ảnh cache 7 ngày vì hiếm khi đổi.
+
+Nếu sau này thêm hash vào tên file (ví dụ `theme.a1b2c3.css`) thì hạ được `max-age` lên 1 năm
+cho CSS/JS.
+
+### Vì sao chọn Cloudflare thay vì Render
+
+Render đáp ứng đủ yêu cầu kỹ thuật, nhưng gói free chỉ có **5 GB băng thông/tháng**, và khi
+vượt mức mà chưa gắn thẻ thanh toán thì Render **tạm ngưng toàn bộ dịch vụ tới hết tháng** —
+site tắt hẳn chứ không phải chậm đi. Cloudflare Pages không giới hạn băng thông nên không tồn
+tại kịch bản đó, đồng thời có POP tại TP.HCM và Hà Nội nên nhanh hơn với khách trong nước.
+
+### Ảnh Open Graph
+
+`assets/img/og-cover.png` — **1200×630, 29 KB**, đúng cỡ Facebook, Zalo và LinkedIn khuyến nghị.
+
+Bản SVG cũ đã gỡ: phần lớn mạng xã hội **không đọc được SVG**, chia sẻ link sẽ ra thẻ trắng
+không ảnh. Ảnh mới vẽ bằng GDI+ (script trong lịch sử phiên làm việc), dùng font Segoe UI vì
+Public Sans không cài sẵn trên máy — ảnh tĩnh nên không ảnh hưởng gì.
+
+Kèm theo `og:image:type` và `og:image:alt` để Facebook và Zalo dựng thẻ xem trước chính xác hơn.
+
+**Đổi ảnh này:** thay `og-cover.png` bằng file PNG/JPG khác đúng **1200×630**. Sai tỉ lệ thì
+Facebook tự cắt, thường cắt mất chữ.

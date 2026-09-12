@@ -1,0 +1,3 @@
+# Gom www ve ten mien goc de tranh trung lap noi dung khi Google lap chi muc.
+# Can them ca hai ten mien trong Cloudflare Pages > Custom domains.
+https://www.tanpham.info/* https://tanpham.info/:splat 301!

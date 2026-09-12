@@ -1,0 +1,25 @@
+# =============================================================================
+# _headers — Cloudflare Pages doc file nay va KHONG phuc vu no nhu noi dung
+# =============================================================================
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+
+# HTML luon kiem tra lai -> sua noi dung la khach thay ngay, khong ket cache
+/
+  Cache-Control: public, max-age=0, must-revalidate
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# CSS/JS khong co hash trong ten file nen chi cache ngan,
+# neu khong thi sua theme.css xong khach van dung ban cu ca tuan
+/assets/css/*
+  Cache-Control: public, max-age=3600
+/assets/js/*
+  Cache-Control: public, max-age=3600
+
+# Anh doi rat it -> cache dai hon cho nhe bang thong
+/assets/img/*
+  Cache-Control: public, max-age=604800
