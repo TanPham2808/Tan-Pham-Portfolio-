@@ -1,0 +1,23 @@
+# Access key Web3Forms — KHÔNG BAO GIỜ commit file này.
+# Dùng assets/js/config.example.js làm mẫu.
+assets/js/config.js
+
+# Cấu hình cục bộ của công cụ — không thuộc mã nguồn site
+.claude/settings.local.json
+.claude/launch.json
+
+# Hệ điều hành
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Trình soạn thảo
+.vscode/
+.idea/
+*.swp
+*~
+
+# Nhật ký và thư mục sinh ra khi build (site này không dùng build tool)
+*.log
+node_modules/
+dist/

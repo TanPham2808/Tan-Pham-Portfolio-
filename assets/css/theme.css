@@ -1,0 +1,1072 @@
+/* ==========================================================================
+   THEME.CSS — Toàn bộ CSS tuỳ chỉnh của site
+   Hỗ trợ 2 giao diện: light (mặc định) và dark, chuyển bằng data-bs-theme.
+
+   Kiến trúc token:
+   · :root                    -> giá trị --tp-* của giao diện SÁNG
+   · [data-bs-theme="dark"]   -> ghi đè CHỈ các --tp-* đổi theo giao diện
+   · phần 2 map --bs-* = var(--tp-*) nên đổi giao diện là mọi thứ tự theo.
+
+   Quy ước dùng màu thương hiệu:
+   · --tp-primary  -> MẶT PHẲNG TÔ ĐẶC (nút, FAB) — luôn đi kèm chữ trắng
+   · --tp-accent   -> CHỮ / ICON đặt trên nền trang — sáng lên ở dark mode
+                      để giữ tương phản WCAG AA
+   · --tp-surface  -> nền của card / navbar dính / dropdown / offcanvas
+
+   Thứ tự: 1) Token · 2) Override Bootstrap · 3) Typography · 4) Tiện ích
+           5) Navbar · 6) Hero · 7) Card/Step · 8) Form · 9) Footer
+           10) Hiệu ứng · 11) prefers-reduced-motion
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1) DESIGN TOKEN — GIAO DIỆN SÁNG
+   -------------------------------------------------------------------------- */
+:root {
+  /* Màu thương hiệu */
+  --tp-primary:            #8b3dff;
+  --tp-primary-rgb:        139, 61, 255;
+  --tp-primary-hover:      #7526f0;
+  --tp-primary-subtle:     rgba(139, 61, 255, .08);
+  --tp-primary-border:     rgba(139, 61, 255, .18);
+
+  /* Màu nhấn dùng cho chữ & icon trên nền trang */
+  --tp-accent:             #8b3dff;
+  --tp-accent-rgb:         139, 61, 255;
+  --tp-accent-hover:       #7526f0;
+
+  /* Độ mờ của nền/viền dẫn xuất từ màu nhấn (xem .tp-card-s1..s3) */
+  --tp-tint-a:             .10;
+  --tp-edge-a:             .22;
+
+  /* Nền & chữ */
+  --tp-body-bg:            #ffffff;
+  --tp-surface:            #ffffff;
+  --tp-section-bg:         #f8fafc;
+  --tp-hero-bg:            #8b3dff;
+  --tp-heading:            #0f172a;
+  --tp-body-color:         #64748b;
+  --tp-muted:              #94a3b8;
+  --tp-border:             #e2e8f0;
+
+  /* Liên kết */
+  --tp-link:               #7526f0;
+  --tp-link-rgb:           117, 38, 240;
+  --tp-link-hover:         #8b3dff;
+  --tp-link-hover-rgb:     139, 61, 255;
+  --tp-body-color-rgb:     100, 116, 139;
+
+  /* Trạng thái */
+  --tp-success:            #008008;
+  --tp-success-rgb:        0, 128, 8;
+  --tp-danger:             #db1436;
+  --tp-danger-rgb:         219, 20, 54;
+  --tp-warning:            #ffc107;
+  --tp-warning-rgb:        255, 193, 7;
+
+  /* Chữ đặt trên nền primary (đạt WCAG AA trên #8b3dff) */
+  --tp-on-primary:         #ffffff;
+  --tp-on-primary-soft:    rgba(255, 255, 255, .95);
+
+  /* Bo góc */
+  --tp-radius-sm:          .25rem;
+  --tp-radius:             .5rem;
+  --tp-radius-lg:          .75rem;
+  --tp-radius-xl:          1rem;
+  --tp-radius-2xl:         2rem;
+  --tp-radius-pill:        50rem;
+
+  /* Đổ bóng */
+  --tp-shadow-sm:          0 .125rem .25rem rgba(2, 6, 23, .075);
+  --tp-shadow-md:          0 .5rem 1rem rgba(2, 6, 23, .08);
+  --tp-shadow-lg:          0 1rem 3rem rgba(2, 6, 23, .12);
+
+  /* Nhịp & khung */
+  --tp-section-space:      7rem;      /* py-lg-9 */
+  --tp-container:          1140px;
+  --tp-navbar-h:           88px;
+
+  /* Hiệu ứng */
+  --tp-ease:               cubic-bezier(.25, .46, .45, .94);
+  --tp-cue-duration:       700ms;
+  --tp-cue-shift:          24px;
+
+  /* Font */
+  --tp-font-sans:          "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  color-scheme: light;
+}
+
+/* --------------------------------------------------------------------------
+   1b) DESIGN TOKEN — GIAO DIỆN TỐI
+   Chỉ ghi đè những token thực sự đổi. Mọi tỉ lệ tương phản dưới đây đã kiểm
+   tra đạt WCAG AA cho cỡ chữ thường (>= 4.5:1).
+   -------------------------------------------------------------------------- */
+[data-bs-theme="dark"] {
+  /* Nút tô đặc giữ nguyên tím thương hiệu + chữ trắng (4.99:1) */
+  --tp-primary:            #8b3dff;
+  --tp-primary-rgb:        139, 61, 255;
+  --tp-primary-hover:      #7526f0;
+  --tp-primary-subtle:     rgba(163, 112, 255, .14);
+  --tp-primary-border:     rgba(163, 112, 255, .30);
+
+  /* Chữ/icon màu nhấn phải sáng hơn để đọc được trên nền tối (6.8:1) */
+  --tp-accent:             #b48bff;
+  --tp-accent-rgb:         180, 139, 255;
+  --tp-accent-hover:       #cdb2ff;
+
+  /* Nền tối cần nền/viền dẫn xuất đậm hơn mới nhìn thấy */
+  --tp-tint-a:             .16;
+  --tp-edge-a:             .34;
+
+  --tp-body-bg:            #0b1220;
+  --tp-surface:            #131f36;
+  --tp-section-bg:         #111b2e;
+  --tp-hero-bg:            #5b21b6;   /* trắng trên nền này = 8.9:1 */
+  --tp-heading:            #f1f5f9;
+  --tp-body-color:         #a3b2c7;
+  --tp-muted:              #64748b;
+  --tp-border:             #26334b;
+
+  --tp-link:               #b48bff;
+  --tp-link-rgb:           180, 139, 255;
+  --tp-link-hover:         #cdb2ff;
+  --tp-link-hover-rgb:     205, 178, 255;
+  --tp-body-color-rgb:     163, 178, 199;
+
+  --tp-success:            #4ade80;
+  --tp-success-rgb:        74, 222, 128;
+  --tp-danger:             #ff7a90;
+  --tp-danger-rgb:         255, 122, 144;
+  --tp-warning:            #ffd24d;
+  --tp-warning-rgb:        255, 210, 77;
+
+  /* Bóng phải đậm hơn nhiều mới nhìn thấy trên nền tối */
+  --tp-shadow-sm:          0 .125rem .25rem rgba(0, 0, 0, .35);
+  --tp-shadow-md:          0 .5rem 1rem rgba(0, 0, 0, .45);
+  --tp-shadow-lg:          0 1rem 3rem rgba(0, 0, 0, .55);
+
+  color-scheme: dark;
+}
+
+/* --------------------------------------------------------------------------
+   2) OVERRIDE BIẾN BOOTSTRAP
+   Map sang var(--tp-*) chứ không ghi giá trị cứng, nhờ vậy khối [data-bs-theme]
+   ở trên tự động lan xuống toàn bộ component của Bootstrap.
+   -------------------------------------------------------------------------- */
+:root {
+  --bs-primary:            var(--tp-primary);
+  --bs-primary-rgb:        var(--tp-primary-rgb);
+  --bs-primary-text-emphasis: var(--tp-accent);
+  --bs-primary-bg-subtle:  var(--tp-primary-subtle);
+  --bs-primary-border-subtle: var(--tp-primary-border);
+
+  --bs-success:            var(--tp-success);
+  --bs-success-rgb:        var(--tp-success-rgb);
+  --bs-danger:             var(--tp-danger);
+  --bs-danger-rgb:         var(--tp-danger-rgb);
+  --bs-warning:            var(--tp-warning);
+  --bs-warning-rgb:        var(--tp-warning-rgb);
+
+  --bs-body-bg:            var(--tp-body-bg);
+  --bs-body-color:         var(--tp-body-color);
+  --bs-body-color-rgb:     var(--tp-body-color-rgb);
+  --bs-emphasis-color:     var(--tp-heading);
+  --bs-secondary-color:    var(--tp-muted);
+  --bs-border-color:       var(--tp-border);
+
+  --bs-link-color:         var(--tp-link);
+  --bs-link-color-rgb:     var(--tp-link-rgb);
+  --bs-link-hover-color:   var(--tp-link-hover);
+  --bs-link-hover-color-rgb: var(--tp-link-hover-rgb);
+
+  --bs-font-sans-serif:    var(--tp-font-sans);
+  --bs-body-font-family:   var(--tp-font-sans);
+  --bs-body-font-size:     1rem;
+  --bs-body-line-height:   1.6;
+
+  --bs-border-radius-sm:   var(--tp-radius-sm);
+  --bs-border-radius:      var(--tp-radius);
+  --bs-border-radius-lg:   var(--tp-radius-lg);
+  --bs-border-radius-xl:   var(--tp-radius-xl);
+  --bs-border-radius-2xl:  var(--tp-radius-2xl);
+  --bs-border-radius-pill: var(--tp-radius-pill);
+
+  --bs-box-shadow-sm:      var(--tp-shadow-sm);
+  --bs-box-shadow:         var(--tp-shadow-md);
+  --bs-box-shadow-lg:      var(--tp-shadow-lg);
+}
+
+/* --------------------------------------------------------------------------
+   3) TYPOGRAPHY
+   -------------------------------------------------------------------------- */
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--tp-font-sans);
+  color: var(--tp-body-color);
+  background-color: var(--tp-body-bg);
+  overflow-x: hidden;            /* chặn tràn ngang do phần tử trang trí */
+}
+
+/* Chuyển màu mượt khi đổi giao diện sáng <-> tối */
+body,
+.tp-hero,
+.tp-section-alt,
+.tp-footer,
+.tp-contact-card,
+.tp-avatar,
+.form-control {
+  transition: background-color .25s var(--tp-ease),
+              border-color .25s var(--tp-ease),
+              color .25s var(--tp-ease);
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3 { color: var(--tp-heading); }
+
+h1, .h1 {
+  font-size: clamp(2.25rem, 1.6rem + 2.2vw, 2.9rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -.03em;
+}
+
+h2, .h2 {
+  font-size: clamp(1.6rem, 1.3rem + 1.1vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -.02em;
+}
+
+h3, .h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.lead {
+  font-size: 1.0625rem;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+/* Nhãn nhỏ đặt trên tiêu đề */
+.tp-eyebrow {
+  display: inline-block;
+  margin-bottom: .5rem;
+  font-size: .8125rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--tp-accent);
+}
+
+.tp-hero .tp-eyebrow { color: var(--tp-on-primary); }
+
+/* --------------------------------------------------------------------------
+   4) TIỆN ÍCH BỔ SUNG
+   -------------------------------------------------------------------------- */
+@media (min-width: 1200px) {
+  .container { max-width: var(--tp-container); }
+}
+
+/* Bootstrap không có bậc spacing 9 (7rem) */
+.py-9 { padding-top: var(--tp-section-space) !important; padding-bottom: var(--tp-section-space) !important; }
+.pt-9 { padding-top: var(--tp-section-space) !important; }
+.pb-9 { padding-bottom: var(--tp-section-space) !important; }
+
+@media (min-width: 992px) {
+  .py-lg-9 { padding-top: var(--tp-section-space) !important; padding-bottom: var(--tp-section-space) !important; }
+  .pt-lg-9 { padding-top: var(--tp-section-space) !important; }
+  .pb-lg-9 { padding-bottom: var(--tp-section-space) !important; }
+}
+
+.tp-section-alt { background-color: var(--tp-section-bg); }
+
+/* Bù chiều cao navbar khi nhảy tới neo */
+section[id],
+main[id],
+div[id] { scroll-margin-top: var(--tp-navbar-h); }
+
+/* Focus ring luôn nhìn thấy rõ */
+:focus-visible {
+  outline: 3px solid var(--tp-accent);
+  outline-offset: 2px;
+  border-radius: var(--tp-radius-sm);
+}
+
+.tp-hero :focus-visible,
+.tp-navbar:not(.navbar-stick) :focus-visible {
+  outline-color: var(--tp-on-primary);
+}
+
+/* Bỏ qua tới nội dung chính */
+.tp-skip-link {
+  position: absolute;
+  top: .5rem;
+  left: .5rem;
+  z-index: 2000;
+  padding: .5rem 1rem;
+  border-radius: var(--tp-radius);
+  background: var(--tp-surface);
+  color: var(--tp-link);
+  font-weight: 600;
+  box-shadow: var(--tp-shadow-md);
+  transform: translateY(-200%);
+}
+.tp-skip-link:focus { transform: translateY(0); }
+
+/* --------------------------------------------------------------------------
+   5) NAVBAR + MEGA MENU + OFFCANVAS
+   -------------------------------------------------------------------------- */
+.tp-navbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1030;
+  min-height: var(--tp-navbar-h);
+  background-color: transparent;
+  transition: background-color .3s var(--tp-ease), box-shadow .3s var(--tp-ease);
+}
+
+.tp-navbar .navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+  letter-spacing: -.02em;
+  color: var(--tp-on-primary);
+}
+
+/* Logo monogram chữ T — hai lớp màu điều khiển qua biến để đảo được âm/dương */
+.tp-logo {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+}
+.tp-logo-tile { fill: var(--tp-logo-tile, var(--tp-primary)); transition: fill .25s var(--tp-ease); }
+.tp-logo-mark { fill: var(--tp-logo-mark, #ffffff); transition: fill .25s var(--tp-ease); }
+
+/* Trên navbar trong suốt (đè lên hero) thì đảo lại: khối trắng, chữ T màu hero */
+.tp-navbar:not(.navbar-stick) .tp-logo {
+  --tp-logo-tile: #ffffff;
+  --tp-logo-mark: var(--tp-hero-bg);
+}
+
+/* Mục menu dạng <button> vẫn phải trông như <a class="nav-link"> */
+.tp-navbar button.nav-link,
+.tp-offcanvas button.nav-link {
+  background: none;
+  border: 0;
+  text-align: left;
+}
+
+.tp-navbar .nav-link {
+  font-weight: 500;
+  color: var(--tp-on-primary-soft);
+  transition: color .15s var(--tp-ease);
+}
+.tp-navbar .nav-link:hover,
+.tp-navbar .nav-link:focus,
+.tp-navbar .nav-link.show { color: var(--tp-on-primary); }
+
+.tp-navbar .tp-toggler {
+  border: 0;
+  padding: .25rem .5rem;
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--tp-on-primary);
+  background: transparent;
+}
+
+.tp-navbar .tp-nav-cta {
+  background-color: var(--tp-on-primary);
+  border-color: var(--tp-on-primary);
+  color: var(--tp-primary-hover);
+}
+.tp-navbar .tp-nav-cta:hover,
+.tp-navbar .tp-nav-cta:focus {
+  background-color: var(--tp-on-primary);
+  border-color: var(--tp-on-primary);
+  color: var(--tp-primary-hover);
+  transform: translateY(-2px);
+}
+
+/* Nút chuyển giao diện sáng / tối */
+.tp-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, .4);
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--tp-on-primary);
+  font-size: 1.0625rem;
+  line-height: 1;
+  transition: background-color .15s var(--tp-ease),
+              border-color .15s var(--tp-ease),
+              color .15s var(--tp-ease);
+}
+.tp-theme-toggle:hover { background-color: rgba(255, 255, 255, .16); }
+
+/* Chỉ hiện icon tương ứng với giao diện SẮP chuyển sang */
+.tp-theme-toggle .tp-icon-sun { display: none; }
+[data-bs-theme="dark"] .tp-theme-toggle .tp-icon-sun { display: inline-block; }
+[data-bs-theme="dark"] .tp-theme-toggle .tp-icon-moon { display: none; }
+
+/* Trên nền sáng (navbar dính hoặc trong offcanvas) thì đổi sang viền/chữ theo token */
+.tp-navbar.navbar-stick .tp-theme-toggle {
+  border-color: var(--tp-border);
+  color: var(--tp-heading);
+}
+.tp-navbar.navbar-stick .tp-theme-toggle:hover {
+  background-color: var(--tp-primary-subtle);
+  border-color: var(--tp-primary-border);
+  color: var(--tp-accent);
+}
+
+/* Trạng thái dính */
+.tp-navbar.navbar-stick {
+  background-color: var(--tp-surface);
+  box-shadow: var(--tp-shadow-sm);
+  animation: tpSlideDown .3s var(--tp-ease) both;
+}
+@keyframes tpSlideDown {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(0); }
+}
+
+.tp-navbar.navbar-stick .navbar-brand { color: var(--tp-heading); }
+.tp-navbar.navbar-stick .nav-link { color: var(--tp-body-color); }
+.tp-navbar.navbar-stick .nav-link:hover,
+.tp-navbar.navbar-stick .nav-link:focus,
+.tp-navbar.navbar-stick .nav-link.show { color: var(--tp-accent); }
+.tp-navbar.navbar-stick .tp-toggler { color: var(--tp-heading); }
+.tp-navbar.navbar-stick .tp-nav-cta {
+  background-color: var(--tp-primary);
+  border-color: var(--tp-primary);
+  color: var(--tp-on-primary);
+}
+.tp-navbar.navbar-stick .tp-nav-cta:hover,
+.tp-navbar.navbar-stick .tp-nav-cta:focus {
+  background-color: var(--tp-primary-hover);
+  border-color: var(--tp-primary-hover);
+  color: var(--tp-on-primary);
+}
+
+/* Mega menu
+   Lưu ý: Bootstrap khai báo --bs-dropdown-* NGAY TRÊN class .dropdown-menu,
+   nên phải ghi đè tại chính selector đó — đặt ở :root sẽ bị che. */
+.tp-navbar .dropdown-menu {
+  --bs-dropdown-bg: var(--tp-surface);
+  --bs-dropdown-border-color: var(--tp-border);
+  --bs-dropdown-color: var(--tp-body-color);
+  --bs-dropdown-link-color: var(--tp-body-color);
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius-lg);
+  box-shadow: var(--tp-shadow-lg);
+}
+
+.tp-mega-link {
+  display: flex;
+  gap: .75rem;
+  padding: .75rem;
+  border-radius: var(--tp-radius);
+  color: var(--tp-body-color);
+  text-decoration: none;
+  transition: background-color .2s var(--tp-ease);
+}
+.tp-mega-link:hover,
+.tp-mega-link:focus { background-color: var(--tp-primary-subtle); color: var(--tp-body-color); }
+
+.tp-mega-link .bi {
+  flex: 0 0 auto;
+  font-size: 1.25rem;
+  color: var(--tp-accent);
+  line-height: 1.4;
+}
+.tp-mega-link strong { display: block; color: var(--tp-heading); font-weight: 600; }
+.tp-mega-link span { font-size: .875rem; }
+
+@media (min-width: 992px) {
+  .tp-navbar .navbar-nav { gap: .25rem; }
+
+  /* Mega menu trải ngang theo container (toggle dùng data-bs-display="static"
+     nên Popper không chèn transform inline, ta tự định vị và tự animate) */
+  .tp-navbar > .container { position: relative; }
+  .tp-navbar .tp-mega {
+    top: 100%;
+    right: 0;
+    left: 0;
+    width: auto;
+    margin-top: .5rem;
+  }
+
+  /* Mở bằng fade + translateY(8px) */
+  .tp-navbar .dropdown-menu {
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .2s var(--tp-ease), transform .2s var(--tp-ease), visibility .2s linear;
+  }
+  .tp-navbar .dropdown-menu.show {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Offcanvas — chỉ áp dụng khi thực sự là panel trượt (dưới lg).
+   Từ lg trở lên, offcanvas chỉ là hàng ngang trong navbar nên phải giữ
+   màu chữ của navbar, không ghi đè bằng màu body. */
+.tp-offcanvas {
+  /* cùng lý do như .dropdown-menu: biến khai báo trên chính class .offcanvas */
+  --bs-offcanvas-bg: var(--tp-surface);
+  --bs-offcanvas-color: var(--tp-body-color);
+  --bs-offcanvas-border-color: var(--tp-border);
+}
+.tp-offcanvas .offcanvas-title { color: var(--tp-heading); font-weight: 700; }
+
+@media (max-width: 991.98px) {
+  .tp-offcanvas .nav-link { color: var(--tp-body-color); font-weight: 500; }
+  .tp-offcanvas .nav-link:hover,
+  .tp-offcanvas .nav-link:focus,
+  .tp-offcanvas .nav-link.show { color: var(--tp-accent); }
+  .tp-offcanvas .dropdown-menu { border: 0; box-shadow: none; padding-left: 0; background: transparent; }
+  .tp-offcanvas :focus-visible { outline-color: var(--tp-accent); }
+
+  /* Trong panel offcanvas, CTA phải là nút primary đặc — kiểu "nền trắng"
+     dành cho navbar trong suốt sẽ vô hình trên panel sáng. */
+  .tp-offcanvas .tp-nav-cta {
+    background-color: var(--tp-primary);
+    border-color: var(--tp-primary);
+    color: var(--tp-on-primary);
+  }
+  .tp-offcanvas .tp-nav-cta:hover,
+  .tp-offcanvas .tp-nav-cta:focus {
+    background-color: var(--tp-primary-hover);
+    border-color: var(--tp-primary-hover);
+    color: var(--tp-on-primary);
+  }
+
+  /* Nút đổi giao diện nằm trong panel offcanvas -> dùng màu theo token */
+  .tp-offcanvas .tp-theme-toggle {
+    border-color: var(--tp-border);
+    color: var(--tp-heading);
+  }
+  .tp-offcanvas .tp-theme-toggle:hover {
+    background-color: var(--tp-primary-subtle);
+    border-color: var(--tp-primary-border);
+    color: var(--tp-accent);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6) HERO + ẢNH ĐẠI DIỆN
+   -------------------------------------------------------------------------- */
+.tp-hero {
+  position: relative;
+  padding-top: calc(var(--tp-navbar-h) + 2.5rem);
+  padding-bottom: 7rem;
+  background-color: var(--tp-hero-bg);
+  color: var(--tp-on-primary);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2rem), 0 100%);
+}
+
+.tp-hero h1 { color: var(--tp-on-primary); }
+.tp-hero .tp-hero-lead {
+  max-width: 62ch;
+  margin-inline: auto;
+  color: var(--tp-on-primary-soft);
+}
+.tp-hero .tp-hero-note {
+  font-size: .875rem;
+  color: var(--tp-on-primary-soft);
+}
+
+@media (min-width: 992px) {
+  .tp-hero {
+    padding-top: calc(var(--tp-navbar-h) + 4.5rem);
+    padding-bottom: 9rem;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4rem), 0 100%);
+  }
+}
+
+/* Nút trắng trên nền primary */
+.tp-btn-on-primary {
+  background-color: var(--tp-on-primary);
+  border-color: var(--tp-on-primary);
+  color: var(--tp-primary-hover);
+  font-weight: 600;
+}
+.tp-btn-on-primary:hover,
+.tp-btn-on-primary:focus {
+  background-color: var(--tp-on-primary);
+  border-color: var(--tp-on-primary);
+  color: var(--tp-primary-hover);
+}
+
+.tp-btn-outline-on-primary {
+  background-color: transparent;
+  border-color: var(--tp-on-primary);
+  color: var(--tp-on-primary);
+  font-weight: 600;
+}
+.tp-btn-outline-on-primary:hover,
+.tp-btn-outline-on-primary:focus {
+  background-color: rgba(255, 255, 255, .14);
+  border-color: var(--tp-on-primary);
+  color: var(--tp-on-primary);
+}
+
+/* Ảnh đại diện tròn đè lên ranh giới hero / section kế tiếp */
+.tp-avatar-band {
+  position: relative;
+  z-index: 3;
+  margin-top: -80px;
+  text-align: center;
+}
+
+.tp-avatar {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 8px solid var(--tp-body-bg);
+  box-shadow: var(--tp-shadow-lg);
+  background-color: var(--tp-section-bg);
+}
+
+/* --------------------------------------------------------------------------
+   7) NÚT · CARD · BƯỚC QUY TRÌNH · BADGE
+   -------------------------------------------------------------------------- */
+.btn {
+  font-weight: 600;
+  border-radius: var(--tp-radius);
+  transition: background-color .15s var(--tp-ease),
+              border-color .15s var(--tp-ease),
+              color .15s var(--tp-ease),
+              transform .15s var(--tp-ease),
+              box-shadow .15s var(--tp-ease);
+}
+.btn:hover { transform: translateY(-2px); }
+
+.btn-primary {
+  --bs-btn-bg: var(--tp-primary);
+  --bs-btn-border-color: var(--tp-primary);
+  --bs-btn-color: var(--tp-on-primary);
+  --bs-btn-hover-bg: var(--tp-primary-hover);
+  --bs-btn-hover-border-color: var(--tp-primary-hover);
+  --bs-btn-hover-color: var(--tp-on-primary);
+  --bs-btn-active-bg: var(--tp-primary-hover);
+  --bs-btn-active-border-color: var(--tp-primary-hover);
+  --bs-btn-active-color: var(--tp-on-primary);
+  --bs-btn-disabled-bg: var(--tp-primary);
+  --bs-btn-disabled-border-color: var(--tp-primary);
+  --bs-btn-disabled-color: var(--tp-on-primary);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--tp-accent);
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: var(--tp-accent);
+  --bs-btn-hover-bg: var(--tp-primary-hover);
+  --bs-btn-hover-border-color: var(--tp-primary-hover);
+  --bs-btn-hover-color: var(--tp-on-primary);
+  --bs-btn-active-bg: var(--tp-primary-hover);
+  --bs-btn-active-border-color: var(--tp-primary-hover);
+  --bs-btn-active-color: var(--tp-on-primary);
+  --bs-btn-disabled-color: var(--tp-accent);
+  --bs-btn-disabled-border-color: var(--tp-accent);
+}
+
+/* Card dịch vụ */
+.tp-card {
+  height: 100%;
+  padding: 2rem;
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius-xl);
+  background-color: var(--tp-surface);
+  box-shadow: var(--tp-shadow-sm);
+  transition: transform .3s ease, box-shadow .3s ease,
+              background-color .25s var(--tp-ease), border-color .25s var(--tp-ease);
+}
+.tp-card:hover,
+.tp-card:focus-within {
+  transform: translateY(-6px);
+  box-shadow: var(--tp-shadow-md);
+}
+
+.tp-icon-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--tp-primary-border);
+  border-radius: var(--tp-radius-lg);
+  background-color: var(--tp-primary-subtle);
+  color: var(--tp-accent);
+  font-size: 1.5rem;
+  transition: transform .3s var(--tp-ease), border-color .3s var(--tp-ease);
+}
+
+/* ----- Nhấn mạnh ba khối dịch vụ ------------------------------------------ */
+/* Mỗi thẻ mang một màu nhấn riêng qua --tp-card-accent (+ bản -rgb để dẫn xuất
+   nền và viền). Mặc định là tím thương hiệu; .tp-card-s2/.tp-card-s3 ghi đè. */
+.tp-card-service {
+  --tp-card-accent: var(--tp-accent);
+  --tp-card-accent-rgb: var(--tp-accent-rgb);
+  position: relative;
+  overflow: hidden;
+  padding-top: 2.25rem;
+  box-shadow: var(--tp-shadow-md);
+}
+
+/* 01 · Backend và API — tím thương hiệu */
+.tp-card-s1 {
+  --tp-card-accent: var(--tp-accent);
+  --tp-card-accent-rgb: var(--tp-accent-rgb);
+}
+
+/* 02 · AI và Automation — teal */
+.tp-card-s2 {
+  --tp-card-accent: #0f766e;
+  --tp-card-accent-rgb: 15, 118, 110;
+}
+
+/* 03 · DevOps và vận hành — cam đất */
+.tp-card-s3 {
+  --tp-card-accent: #c2410c;
+  --tp-card-accent-rgb: 194, 65, 12;
+}
+
+/* Giao diện tối cần sắc sáng hơn hẳn mới đủ tương phản trên nền #131f36 */
+[data-bs-theme="dark"] .tp-card-s2 {
+  --tp-card-accent: #2dd4bf;
+  --tp-card-accent-rgb: 45, 212, 191;
+}
+[data-bs-theme="dark"] .tp-card-s3 {
+  --tp-card-accent: #fb923c;
+  --tp-card-accent-rgb: 251, 146, 60;
+}
+
+/* Vạch màu chạy dọc mép trên mỗi thẻ */
+.tp-card-service::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background-image: linear-gradient(90deg,
+    var(--tp-card-accent),
+    rgba(var(--tp-card-accent-rgb), .35));
+}
+
+/* Ô icon lấy màu theo thẻ */
+.tp-card-service .tp-icon-box {
+  border-color: rgba(var(--tp-card-accent-rgb), var(--tp-edge-a));
+  background-color: rgba(var(--tp-card-accent-rgb), var(--tp-tint-a));
+  color: var(--tp-card-accent);
+}
+
+/* Dấu check trong danh sách cũng theo màu thẻ */
+.tp-card-service .tp-check-list .bi { color: var(--tp-card-accent); }
+
+/* Số thứ tự mờ ở góc phải — chỉ để trang trí, đã ẩn khỏi trình đọc màn hình */
+.tp-card-index {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.5rem;
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.04em;
+  color: var(--tp-card-accent);
+  opacity: .18;
+  pointer-events: none;
+}
+
+.tp-card-service h3 { letter-spacing: -.01em; }
+
+.tp-card-service:hover,
+.tp-card-service:focus-within {
+  border-color: rgba(var(--tp-card-accent-rgb), var(--tp-edge-a));
+  box-shadow: var(--tp-shadow-lg);
+}
+.tp-card-service:hover .tp-icon-box,
+.tp-card-service:focus-within .tp-icon-box {
+  transform: scale(1.06);
+  border-color: var(--tp-card-accent);
+}
+
+.tp-check-list { list-style: none; padding-left: 0; margin-bottom: 0; }
+.tp-check-list li {
+  display: flex;
+  gap: .625rem;
+  padding: .3125rem 0;
+  font-size: .9375rem;
+}
+.tp-check-list .bi { color: var(--tp-accent); flex: 0 0 auto; line-height: 1.55; }
+
+/* Đoạn mở đầu đậm hơn ở cột trái khối "Cách làm việc" */
+.tp-lead-strong {
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.65;
+  color: var(--tp-heading);
+}
+
+/* Bước quy trình — lưới 2×2 thẻ viền, số thứ tự nằm ngay trong tiêu đề */
+.tp-step {
+  height: 100%;
+  padding: 1.25rem 1.375rem 1.375rem;
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius-lg);
+  background-color: var(--tp-surface);
+  transition: transform .3s var(--tp-ease),
+              border-color .3s var(--tp-ease),
+              box-shadow .3s var(--tp-ease),
+              background-color .25s var(--tp-ease);
+}
+.tp-step:hover,
+.tp-step:focus-within {
+  transform: translateY(-4px);
+  border-color: var(--tp-primary-border);
+  box-shadow: var(--tp-shadow-md);
+}
+
+.tp-step h3 {
+  margin-bottom: .5rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.tp-step p { margin-bottom: 0; font-size: .9375rem; }
+
+/* Badge pill */
+.tp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .4375rem;
+  padding: .5rem 1rem;
+  border: 1px solid var(--tp-primary-border);
+  border-radius: var(--tp-radius-pill);
+  background-color: var(--tp-primary-subtle);
+  /* dùng sắc đậm hơn --tp-accent: chữ 14px/600 trên nền tím nhạt cần >= 4.5:1 */
+  color: var(--tp-accent-hover);
+  font-size: .875rem;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   8) FORM LIÊN HỆ
+   -------------------------------------------------------------------------- */
+.tp-contact-card {
+  padding: 1.75rem;
+  border: 1px solid var(--tp-border);
+  border-radius: var(--tp-radius-xl);
+  background-color: var(--tp-surface);
+  box-shadow: var(--tp-shadow-lg);
+}
+
+@media (min-width: 768px) {
+  .tp-contact-card { padding: 2.75rem; }
+}
+
+.form-label { font-weight: 600; color: var(--tp-heading); font-size: .9375rem; }
+
+.form-control {
+  padding: .625rem .875rem;
+  border-color: var(--tp-border);
+  border-radius: var(--tp-radius);
+  color: var(--tp-heading);
+  transition: border-color .15s var(--tp-ease), box-shadow .15s var(--tp-ease);
+}
+.form-control::placeholder { color: var(--tp-muted); }
+.form-control:focus {
+  border-color: var(--tp-accent);
+  box-shadow: 0 0 0 .25rem var(--tp-primary-subtle);
+}
+
+.was-validated .form-control:invalid,
+.form-control.is-invalid { border-color: var(--tp-danger); }
+.was-validated .form-control:invalid:focus,
+.form-control.is-invalid:focus { box-shadow: 0 0 0 .25rem rgba(var(--tp-danger-rgb), .18); }
+.invalid-feedback { color: var(--tp-danger); font-size: .8125rem; }
+
+.was-validated .form-control:valid,
+.form-control.is-valid { border-color: var(--tp-success); }
+.was-validated .form-control:valid:focus,
+.form-control.is-valid:focus { box-shadow: 0 0 0 .25rem rgba(var(--tp-success-rgb), .16); }
+
+/* Nút gửi form: giữ cỡ chữ 1rem như ô nhập (btn-lg 1.25rem to hơn hẳn nhịp
+   của form), đệm dọc canh cho cao bằng .form-control */
+.tp-btn-submit {
+  padding: .625rem 1.75rem;
+  font-size: 1rem;
+}
+
+/* Bẫy spam: ẩn hẳn khỏi cả màn hình lẫn trình đọc màn hình */
+.tp-hp {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.tp-alert-error {
+  border: 1px solid rgba(var(--tp-danger-rgb), .28);
+  border-radius: var(--tp-radius);
+  /* nền giữ rất nhạt (.05) để chữ #db1436 vẫn đạt 4.5:1 ở giao diện sáng */
+  background-color: rgba(var(--tp-danger-rgb), .05);
+  color: var(--tp-danger);
+}
+.tp-alert-error a { color: inherit; font-weight: 600; }
+
+.tp-alert-success {
+  border: 1px solid rgba(var(--tp-success-rgb), .28);
+  border-radius: var(--tp-radius);
+  /* nền giữ nhạt (.06) để chữ #008008 vẫn đạt 4.5:1 ở giao diện sáng */
+  background-color: rgba(var(--tp-success-rgb), .06);
+  color: var(--tp-success);
+}
+
+/* --------------------------------------------------------------------------
+   9) FOOTER
+   -------------------------------------------------------------------------- */
+.tp-footer {
+  background-color: var(--tp-section-bg);
+  border-top: 1px solid var(--tp-border);
+}
+.tp-footer h2, .tp-footer .tp-footer-title {
+  font-size: .9375rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--tp-heading);
+}
+.tp-footer a { color: var(--tp-body-color); text-decoration: none; }
+.tp-footer a:hover, .tp-footer a:focus { color: var(--tp-link); text-decoration: underline; }
+.tp-footer-list { list-style: none; padding-left: 0; margin-bottom: 0; }
+.tp-footer-list li { padding: .3125rem 0; }
+/* Lưới an toàn: email/địa chỉ dài phải xuống dòng chứ không đè sang cột bên cạnh */
+.tp-footer-list a,
+.tp-footer-list span { overflow-wrap: anywhere; }
+
+.tp-footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  color: var(--tp-heading);
+  text-decoration: none;
+}
+.tp-footer-brand:hover,
+.tp-footer-brand:focus { color: var(--tp-heading); text-decoration: none; }
+
+.tp-footer-about { max-width: 38ch; }
+.tp-footer-rule { border-color: var(--tp-border); opacity: 1; }
+.tp-footer-copy { font-size: .875rem; }
+
+.tp-fine-print { font-size: .8125rem; }
+
+/* --------------------------------------------------------------------------
+   10) HIỆU ỨNG — SCROLL REVEAL & NÚT VỀ ĐẦU TRANG
+   -------------------------------------------------------------------------- */
+[data-cue],
+[data-cues] > * {
+  opacity: 0;
+  transition-property: opacity, transform;
+  transition-duration: var(--tp-cue-duration);
+  transition-timing-function: var(--tp-ease);
+  will-change: opacity, transform;
+}
+
+[data-cue="fadeIn"],
+[data-cues="fadeIn"] > * { transform: none; }
+
+[data-cue="slideInUp"],
+[data-cues="slideInUp"] > * { transform: translateY(var(--tp-cue-shift)); }
+
+[data-cue="zoomIn"],
+[data-cues="zoomIn"] > * { transform: scale(.94); }
+
+.tp-cue-in {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* FAB cuộn về đầu trang */
+.tp-to-top {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1040;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: var(--tp-primary);
+  color: var(--tp-on-primary);
+  font-size: 1.125rem;
+  box-shadow: var(--tp-shadow-md);
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(.8);
+  transition: opacity .3s var(--tp-ease), transform .3s var(--tp-ease), visibility .3s linear, background-color .15s var(--tp-ease);
+}
+.tp-to-top:hover,
+.tp-to-top:focus { background-color: var(--tp-primary-hover); color: var(--tp-on-primary); }
+.tp-to-top.tp-show { opacity: 1; visibility: visible; transform: scale(1); }
+
+@media (min-width: 768px) {
+  .tp-to-top { right: 1.75rem; bottom: 1.75rem; width: 52px; height: 52px; }
+}
+
+/* --------------------------------------------------------------------------
+   11) TÔN TRỌNG prefers-reduced-motion — tắt mọi chuyển động
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-cue],
+  [data-cues] > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .btn:hover,
+  .tp-card:hover,
+  .tp-step:hover,
+  .tp-navbar .tp-nav-cta:hover { transform: none; }
+
+  .tp-to-top { transform: none; }
+  .tp-to-top.tp-show { transform: none; }
+}

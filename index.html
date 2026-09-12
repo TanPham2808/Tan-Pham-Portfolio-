@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- Đặt giao diện TRƯỚC khi trang vẽ để không bị nháy màu.
+       Đây là đoạn script nội tuyến DUY NHẤT của trang; mọi JS khác nằm ở assets/js/app.js -->
+  <script>
+    (function () {
+      var t;
+      try { t = localStorage.getItem('tp-theme'); } catch (e) { /* chế độ riêng tư */ }
+      if (t !== 'light' && t !== 'dark') {
+        t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      document.documentElement.setAttribute('data-bs-theme', t);
+    })();
+  </script>
+
+  <!-- ===== SEO ===== -->
+  <title>Tân Phạm — Backend, AI Automation và DevOps</title>
+  <meta name="description"
+    content="Tân Phạm nhận các hạng mục backend và API, tự động hoá bằng AI, triển khai và vận hành hệ thống cho doanh nghiệp. Phạm vi rõ ràng, bàn giao đầy đủ mã nguồn và tài liệu.">
+  <meta name="author" content="Tân Phạm">
+  <link rel="canonical" href="https://tanpham.info/">
+
+  <!-- ===== Open Graph ===== -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="vi_VN">
+  <meta property="og:site_name" content="Tân Phạm">
+  <meta property="og:title" content="Tân Phạm — Backend, AI Automation và DevOps">
+  <meta property="og:description"
+    content="Tân Phạm nhận các hạng mục backend và API, tự động hoá bằng AI, triển khai và vận hành hệ thống cho doanh nghiệp. Phạm vi rõ ràng, bàn giao đầy đủ mã nguồn và tài liệu.">
+  <meta property="og:url" content="https://tanpham.info/">
+  <meta property="og:image" content="https://tanpham.info/assets/img/og-cover.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- ===== Favicon ===== -->
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+  <!-- ===== Font ===== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&display=swap">
+
+  <!-- ===== Bootstrap 5.3.3 + Bootstrap Icons 1.11.3 (jsDelivr) ===== -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- ===== CSS tuỳ chỉnh ===== -->
+  <link rel="stylesheet" href="assets/css/theme.css">
+</head>
+
+<body>
+
+  <a class="tp-skip-link" href="#noi-dung-chinh">Bỏ qua tới nội dung chính</a>
+
+  <!-- ====================================================================
+       KHỐI 1 — NAVBAR
+       ==================================================================== -->
+  <header>
+    <nav class="navbar navbar-expand-lg tp-navbar" id="tpNavbar" aria-label="Điều hướng chính">
+      <div class="container">
+
+        <a class="navbar-brand" href="#hero">
+          <!-- Logo monogram chữ T: khối bo góc bất đối xứng + chữ T khoét âm bản -->
+          <svg class="tp-logo" viewBox="0 0 32 32" width="34" height="34" aria-hidden="true" focusable="false">
+            <path class="tp-logo-tile"
+              d="M9 0h14a9 9 0 0 1 9 9v20.5a2.5 2.5 0 0 1-2.5 2.5H9a9 9 0 0 1-9-9V9a9 9 0 0 1 9-9Z" />
+            <rect class="tp-logo-mark" x="7.4" y="8.2" width="17.2" height="4.6" rx="1.8" />
+            <rect class="tp-logo-mark" x="13.7" y="8.2" width="4.6" height="15.6" rx="1.8" />
+          </svg>
+          <span>Tân Phạm</span>
+        </a>
+
+        <button class="tp-toggler d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tpMenu"
+          aria-controls="tpMenu" aria-label="Mở menu điều hướng">
+          <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+
+        <div class="offcanvas offcanvas-end tp-offcanvas" tabindex="-1" id="tpMenu" aria-labelledby="tpMenuLabel">
+          <div class="offcanvas-header border-bottom">
+            <span class="offcanvas-title h5 mb-0" id="tpMenuLabel">Menu</span>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Đóng menu"></button>
+          </div>
+
+          <div class="offcanvas-body align-items-lg-center">
+            <ul class="navbar-nav ms-lg-auto mb-2 mb-lg-0 align-items-lg-center">
+
+              <!-- Mục dropdown mega-menu 2 cột -->
+              <li class="nav-item dropdown position-static">
+                <button class="nav-link dropdown-toggle px-lg-3" type="button" id="tpMenuServices"
+                  data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                  Dịch vụ
+                </button>
+                <div class="dropdown-menu tp-mega p-3 p-lg-4" aria-labelledby="tpMenuServices">
+                  <div class="row g-2 g-lg-3">
+                    <div class="col-lg-6">
+                      <a class="tp-mega-link" href="#dich-vu">
+                        <i class="bi bi-hdd-network" aria-hidden="true"></i>
+                        <span>
+                          <strong>Backend và API</strong>
+                          <span>Dịch vụ nền, xử lý dữ liệu và tích hợp giữa các hệ thống.</span>
+                        </span>
+                      </a>
+                      <a class="tp-mega-link" href="#dich-vu">
+                        <i class="bi bi-robot" aria-hidden="true"></i>
+                        <span>
+                          <strong>AI và Automation</strong>
+                          <span>Gắn AI vào dữ liệu và quy trình đang chạy để bớt thao tác lặp lại.</span>
+                        </span>
+                      </a>
+                      <a class="tp-mega-link" href="#dich-vu">
+                        <i class="bi bi-boxes" aria-hidden="true"></i>
+                        <span>
+                          <strong>DevOps và vận hành</strong>
+                          <span>Triển khai, giám sát và xử lý sự cố trên hạ tầng riêng hoặc cloud.</span>
+                        </span>
+                      </a>
+                    </div>
+                    <div class="col-lg-6">
+                      <a class="tp-mega-link" href="#quy-trinh">
+                        <i class="bi bi-list-check" aria-hidden="true"></i>
+                        <span>
+                          <strong>Cách làm việc</strong>
+                          <span>Bốn bước từ làm rõ vấn đề đến bàn giao mã nguồn và tài liệu.</span>
+                        </span>
+                      </a>
+                      <a class="tp-mega-link" href="#the-manh">
+                        <i class="bi bi-clipboard-data" aria-hidden="true"></i>
+                        <span>
+                          <strong>Lợi thế nghiệp vụ</strong>
+                          <span>Nền tảng tài chính và vận hành, trao đổi thẳng với người phụ trách.</span>
+                        </span>
+                      </a>
+                      <a class="tp-mega-link" href="#lien-he">
+                        <i class="bi bi-chat-dots" aria-hidden="true"></i>
+                        <span>
+                          <strong>Trao đổi công việc</strong>
+                          <span>Mô tả hạng mục bạn đang vướng, tôi phản hồi kèm đề xuất phạm vi.</span>
+                        </span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+
+              <li class="nav-item"><a class="nav-link px-lg-3" href="#quy-trinh">Cách làm việc</a></li>
+              <li class="nav-item"><a class="nav-link px-lg-3" href="#the-manh">Lợi thế</a></li>
+              <li class="nav-item"><a class="nav-link px-lg-3" href="#lien-he">Liên hệ</a></li>
+            </ul>
+
+            <div class="d-flex align-items-center gap-2 gap-lg-3 ms-lg-3 mt-3 mt-lg-0">
+              <button type="button" class="tp-theme-toggle" id="tpThemeToggle" aria-pressed="false"
+                title="Chuyển sang giao diện tối">
+                <i class="bi bi-moon-stars tp-icon-moon" aria-hidden="true"></i>
+                <i class="bi bi-sun tp-icon-sun" aria-hidden="true"></i>
+                <span class="visually-hidden">Chuyển giao diện sáng hoặc tối</span>
+              </button>
+              <a class="btn tp-nav-cta" href="#lien-he">Trao đổi công việc</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </nav>
+  </header>
+
+  <main id="noi-dung-chinh">
+
+    <!-- ====================================================================
+         KHỐI 2 — HERO
+         ==================================================================== -->
+    <section class="tp-hero" id="hero">
+      <div class="container">
+        <div class="row justify-content-center text-center">
+          <div class="col-lg-10 col-xl-9">
+
+            <p class="tp-eyebrow" data-cue="fadeIn">Freelance Software Engineer</p>
+
+            <h1 class="mb-3" data-cue="slideInUp" data-delay="100">
+              Backend, AI Automation và DevOps<br class="d-none d-md-inline">
+              cho doanh nghiệp
+            </h1>
+
+            <p class="tp-hero-lead lead mb-4" data-cue="slideInUp" data-delay="200">
+              Tôi giúp doanh nghiệp xây mới, tích hợp hoặc ổn định hệ thống phần mềm: từ API và xử lý dữ liệu đến tự
+              động hóa quy trình, triển khai và giám sát.
+            </p>
+
+            <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 gap-sm-3" data-cue="slideInUp"
+              data-delay="300">
+              <a class="btn tp-btn-on-primary btn-lg px-4" href="#lien-he">Trao đổi công việc</a>
+              <a class="btn tp-btn-outline-on-primary btn-lg px-4" href="#dich-vu">Xem phạm vi nhận việc</a>
+            </div>
+
+            <p class="tp-hero-note mt-3 mb-0" data-cue="fadeIn" data-delay="400">
+              Hiện chỉ nhận công việc theo hạng mục ngoài giờ để tránh xung đột với công việc chính.
+            </p>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ảnh đại diện tròn đè lên ranh giới hero / section kế tiếp -->
+    <div class="tp-avatar-band">
+      <img class="tp-avatar" src="assets/img/avatar.jpg" width="160" height="160" alt="Chân dung Tân Phạm"
+        loading="lazy" decoding="async">
+    </div>
+
+    <!-- ====================================================================
+         KHỐI 3 — DỊCH VỤ
+         ==================================================================== -->
+    <section id="dich-vu" class="py-5 py-lg-9">
+      <div class="container">
+
+        <div class="row justify-content-center text-center mb-4 mb-lg-5">
+          <div class="col-lg-8">
+            <p class="tp-eyebrow" data-cue="fadeIn">Tôi có thể hỗ trợ</p>
+            <h2 class="mb-3" data-cue="slideInUp" data-delay="100">Ba nhóm công việc tôi nhận</h2>
+            <p class="lead mb-0" data-cue="slideInUp" data-delay="200">
+              Không giới hạn ở .NET. Công nghệ được chọn theo hệ thống hiện tại, năng lực đội ngũ và chi phí vận hành
+              của bạn..
+            </p>
+          </div>
+        </div>
+
+        <div class="row g-4" data-cues="slideInUp">
+
+          <div class="col-md-6 col-lg-4">
+            <article class="tp-card tp-card-service tp-card-s1">
+              <span class="tp-card-index" aria-hidden="true">01</span>
+              <span class="tp-icon-box"><i class="bi bi-hdd-network" aria-hidden="true"></i></span>
+              <h3>Backend và API</h3>
+              <p>
+                Xây mới hoặc nâng cấp API, dịch vụ nền, xử lý dữ liệu và tích hợp giữa các hệ thống.
+              </p>
+              <ul class="tp-check-list">
+                <li><i class="bi bi-check2" aria-hidden="true"></i><span>.NET, Node.js, Python, Power Platform hoặc
+                    stack phù
+                    hợp</span></li>
+                <li><i class="bi bi-check2" aria-hidden="true"></i><span>PostgreSQL, MongoDB, Redis, Dataverse</span>
+                </li>
+                <li><i class="bi bi-check2" aria-hidden="true"></i><span>Queue, worker, scheduler và realtime</span>
+                </li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <article class="tp-card tp-card-service tp-card-s2">
+              <span class="tp-card-index" aria-hidden="true">02</span>
+              <span class="tp-icon-box"><i class="bi bi-robot" aria-hidden="true"></i></span>
+              <h3>AI và Automation</h3>
+              <p>
+                Kết nối AI với dữ liệu và quy trình hiện có để giảm thao tác lặp lại, không làm demo
+                tách rời nghiệp vụ.
+              </p>
+              <ul class="tp-check-list">
+                <li><i class="bi bi-check2" aria-hidden="true"></i><span>Trợ lý nội bộ và tìm kiếm tài liệu</span></li>
+                <li><i class="bi bi-check2" aria-hidden="true"></i><span>Tự động xử lý email, biểu mẫu và báo cáo</span>
+                </li>
+                <li><i class="bi bi-check2" aria-hidden="true"></i><span>Tích hợp LLM, API và workflow automation</span>
+                </li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <article class="tp-card tp-card-service tp-card-s3">
+              <span class="tp-card-index" aria-hidden="true">03</span>
+              <span class="tp-icon-box"><i class="bi bi-boxes" aria-hidden="true"></i></span>
+              <h3>DevOps và vận hành</h3>
+              <p>
+                Đưa ứng dụng lên hạ tầng riêng hoặc cloud, có quy trình triển khai và khả năng quan
+                sát khi xảy ra sự cố.
+              </p>
+              <ul class="tp-check-list">
+                <li><i class="bi bi-check2" aria-hidden="true"></i><span>Docker, reverse proxy và CI/CD trên Devops
+                    Azure</span></li>
+                <li><i class="bi bi-check2" aria-hidden="true"></i><span>Logging, monitoring, backup và cảnh báo</span>
+                </li>
+                <li><i class="bi bi-check2" aria-hidden="true"></i><span>Điều tra lỗi và tối ưu hệ thống đang
+                    chạy</span></li>
+              </ul>
+            </article>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         KHỐI 4 — QUY TRÌNH
+         ==================================================================== -->
+    <section id="quy-trinh" class="py-5 py-lg-9">
+      <div class="container">
+        <div class="row g-4 g-lg-5 align-items-start">
+
+          <div class="col-lg-5">
+            <p class="tp-eyebrow" data-cue="fadeIn">Cách làm việc</p>
+            <h2 class="mb-3" data-cue="slideInUp" data-delay="100">Bắt đầu từ một vấn đề cụ thể</h2>
+            <p class="tp-lead-strong mb-3" data-cue="slideInUp" data-delay="200">
+              Bạn không cần chuẩn bị tài liệu kỹ thuật hoàn chỉnh. Chỉ cần mô tả quy trình hiện tại, điểm đang vướng và
+              kết quả mong muốn.
+            </p>
+            <p class="mb-0" data-cue="slideInUp" data-delay="300">
+              Sau buổi trao đổi, tôi sẽ đề xuất phạm vi nhỏ nhất có thể kiểm chứng, đầu ra cần bàn giao, các giả định và
+              rủi ro. Khi hai bên thống nhất mới bắt đầu thực hiện.
+            </p>
+          </div>
+
+          <div class="col-lg-7">
+            <ol class="row row-cols-1 row-cols-sm-2 g-3 list-unstyled mb-0" data-cues="slideInUp">
+
+              <li class="col">
+                <div class="tp-step">
+                  <h3>1. Làm rõ</h3>
+                  <p>Mục tiêu, dữ liệu, hệ thống liên quan và tiêu chí hoàn thành.</p>
+                </div>
+              </li>
+
+              <li class="col">
+                <div class="tp-step">
+                  <h3>2. Chốt phạm vi</h3>
+                  <p>Hạng mục, mốc bàn giao, chi phí và trách nhiệm hai bên.</p>
+                </div>
+              </li>
+
+              <li class="col">
+                <div class="tp-step">
+                  <h3>3. Thực hiện theo mốc</h3>
+                  <p>Làm theo từng mốc nhỏ, có môi trường để kiểm tra tiến độ.</p>
+                </div>
+              </li>
+
+              <li class="col">
+                <div class="tp-step">
+                  <h3>4. Bàn giao và hỗ trợ</h3>
+                  <p>Souce code, cấu hình, hướng dẫn vận hành và phạm vi hỗ trợ.</p>
+                </div>
+              </li>
+
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         KHỐI 5 — THẾ MẠNH
+         ==================================================================== -->
+    <section id="the-manh" class="tp-section-alt py-5 py-lg-9">
+      <div class="container">
+        <div class="row justify-content-center text-center">
+          <div class="col-lg-8">
+
+            <p class="tp-eyebrow" data-cue="fadeIn">Lợi thế nghiệp vụ</p>
+            <h2 class="mb-3" data-cue="slideInUp" data-delay="100">
+              Đọc được nghiệp vụ, không chỉ đọc code
+            </h2>
+            <p class="lead mb-4" data-cue="slideInUp" data-delay="200">
+              Nền tảng nghiệp vụ và vận hành doanh nghiệp giúp tôi trao đổi trực tiếp với người phụ trách
+              nghiệp vụ, chuyển yêu cầu thành luồng xử lý, dữ liệu và tiêu chí kiểm tra cụ thể.
+            </p>
+
+            <div class="d-flex flex-wrap justify-content-center gap-2 gap-sm-3" data-cue="zoomIn" data-delay="300">
+              <span class="tp-badge"><i class="bi bi-cash-coin" aria-hidden="true"></i>Nghiệp vụ tài chính</span>
+              <span class="tp-badge"><i class="bi bi-building-gear" aria-hidden="true"></i>Nghiệp vụ vận hành doanh
+                nghiệp</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         KHỐI 6 — LIÊN HỆ
+         ==================================================================== -->
+    <section id="lien-he" class="py-5 py-lg-9">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 col-xl-7">
+
+            <div class="text-center mb-4">
+              <p class="tp-eyebrow" data-cue="fadeIn">Liên hệ</p>
+              <h2 class="mb-3" data-cue="slideInUp" data-delay="100">Bạn đang có hạng mục cần hoàn thành?</h2>
+              <p class="lead mb-0" data-cue="slideInUp" data-delay="200">
+                Mô tả ngắn vấn đề, hệ thống bạn đang dùng và kết quả bạn cần. Tôi sẽ trả lời kèm đề
+                xuất phạm vi nhỏ nhất có thể kiểm chứng được.
+              </p>
+            </div>
+
+            <div class="tp-contact-card" data-cue="slideInUp" data-delay="300">
+
+              <div class="alert tp-alert-success d-none" id="tpFormSuccess" role="status">
+                <i class="bi bi-check-circle-fill me-1" aria-hidden="true"></i>
+                Đã gửi thành công. Tôi sẽ phản hồi trong vòng 24 giờ làm việc.
+              </div>
+
+              <div class="alert tp-alert-error d-none" id="tpFormError" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-1" aria-hidden="true"></i>
+                <span id="tpFormErrorText">Không gửi được. Vui lòng thử lại.</span>
+                <span class="d-block mt-1">
+                  Hoặc liên hệ trực tiếp:
+                  <a href="tel:+84936864438">0936 864 438</a> ·
+                  <a href="mailto:xtandev@gmail.com">xtandev@gmail.com</a>
+                </span>
+              </div>
+
+              <form id="tpContactForm" class="row g-3" novalidate>
+
+                <!-- ===== Cấu hình Web3Forms =====
+                     Access key KHÔNG nằm trong file này. Nó được đọc từ
+                     assets/js/config.js (file đó nằm trong .gitignore, không lên repo).
+                     Xem assets/js/config.example.js để biết định dạng. -->
+                <input type="hidden" name="subject" value="Liên hệ mới từ tanpham.info">
+                <input type="hidden" name="from_name" value="Website Tân Phạm">
+
+                <!-- Bẫy spam: bot thường điền mọi trường, người thật không thấy ô này -->
+                <label class="tp-hp" aria-hidden="true">
+                  Đừng điền ô này
+                  <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off">
+                </label>
+
+                <div class="col-md-6">
+                  <label class="form-label" for="tpName">Họ và tên</label>
+                  <input type="text" class="form-control" id="tpName" name="hoten" placeholder="Nguyễn Văn A"
+                    autocomplete="name" required minlength="2" maxlength="80">
+                  <div class="invalid-feedback">Vui lòng nhập họ và tên (ít nhất 2 ký tự).</div>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label" for="tpPhone">Số điện thoại</label>
+                  <input type="tel" class="form-control" id="tpPhone" name="dienthoai" placeholder="0901 234 567"
+                    autocomplete="tel" required pattern="(0|\+84)[0-9\s.\-]{8,15}">
+                  <div class="invalid-feedback">Vui lòng nhập số điện thoại hợp lệ, bắt đầu bằng 0 hoặc +84.</div>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label" for="tpEmail">Email</label>
+                  <input type="email" class="form-control" id="tpEmail" name="email" placeholder="ban@congty.vn"
+                    autocomplete="email" required>
+                  <div class="invalid-feedback">Vui lòng nhập email hợp lệ, ví dụ: ban@congty.vn.</div>
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label" for="tpMessage">Nội dung muốn trao đổi</label>
+                  <textarea class="form-control" id="tpMessage" name="noidung" rows="4"
+                    placeholder="Hệ thống hiện tại chạy trên gì, đang vướng ở đâu và bạn cần kết quả gì." required
+                    minlength="10" maxlength="1000"></textarea>
+                  <div class="invalid-feedback">Vui lòng mô tả nội dung cần trao đổi (ít nhất 10 ký tự).</div>
+                </div>
+
+                <div class="col-12 d-grid d-sm-block">
+                  <button type="submit" class="btn btn-primary tp-btn-submit">Gửi nội dung trao đổi</button>
+                </div>
+
+                <div class="col-12">
+                  <p class="tp-fine-print mb-0">
+                    Thông tin của bạn chỉ dùng để liên hệ lại về đúng hạng mục này. Nội dung được
+                    chuyển tới hộp thư của tôi qua dịch vụ Web3Forms và không dùng cho mục đích nào khác.
+                  </p>
+                </div>
+
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====================================================================
+       KHỐI 7 — FOOTER
+       ==================================================================== -->
+  <footer class="tp-footer pt-5 pb-4">
+    <div class="container">
+      <div class="row g-4">
+
+        <div class="col-lg-5">
+          <a class="tp-footer-brand mb-2" href="#hero">
+            <svg class="tp-logo" viewBox="0 0 32 32" width="34" height="34" aria-hidden="true" focusable="false">
+              <path class="tp-logo-tile"
+                d="M9 0h14a9 9 0 0 1 9 9v20.5a2.5 2.5 0 0 1-2.5 2.5H9a9 9 0 0 1-9-9V9a9 9 0 0 1 9-9Z" />
+              <rect class="tp-logo-mark" x="7.4" y="8.2" width="17.2" height="4.6" rx="1.8" />
+              <rect class="tp-logo-mark" x="13.7" y="8.2" width="4.6" height="15.6" rx="1.8" />
+            </svg>
+            <span>Tân Phạm</span>
+          </a>
+          <p class="tp-footer-about mb-0">
+            Freelance Backend · AI Automation · DevOps. Nhận hạng mục theo phạm vi rõ ràng, bàn giao
+            kèm mã nguồn và tài liệu vận hành.
+          </p>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+          <p class="tp-footer-title mb-3">Liên hệ</p>
+          <ul class="tp-footer-list">
+            <li><i class="bi bi-telephone me-2" aria-hidden="true"></i><a href="tel:+84936864438">0936 864 438</a></li>
+            <li><i class="bi bi-envelope me-2" aria-hidden="true"></i><a
+                href="mailto:xtandev@gmail.com">xtandev@gmail.com</a></li>
+            <li><i class="bi bi-geo-alt me-2" aria-hidden="true"></i><span>Tân Phú, Tp. Hồ Chí Minh</span></li>
+          </ul>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-4">
+          <p class="tp-footer-title mb-3">Liên kết</p>
+          <nav aria-label="Liên kết chân trang">
+            <ul class="tp-footer-list">
+              <li><a href="#dich-vu">Dịch vụ</a></li>
+              <li><a href="#quy-trinh">Cách làm việc</a></li>
+              <li><a href="#the-manh">Lợi thế</a></li>
+              <li><a href="#lien-he">Liên hệ</a></li>
+            </ul>
+          </nav>
+        </div>
+
+      </div>
+
+      <hr class="tp-footer-rule my-4">
+
+      <p class="tp-footer-copy mb-0 text-center text-lg-start">
+        © <span id="tpYear">2026</span> Tân Phạm — Backend, AI Automation &amp; DevOps.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Nút cuộn về đầu trang -->
+  <button type="button" class="tp-to-top" id="tpToTop" aria-label="Cuộn về đầu trang">
+    <i class="bi bi-arrow-up" aria-hidden="true"></i>
+  </button>
+
+  <!-- ===== Script ===== -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Cấu hình cục bộ (access key) — không có trong repo, xem config.example.js -->
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/app.js"></script>
+
+</body>
+
+</html>
