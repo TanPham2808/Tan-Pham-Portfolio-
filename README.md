@@ -367,29 +367,56 @@ JS chưa chạy.
   chữ nhảy lên `1.25rem`, to hơn hẳn nhãn (15px) và ô nhập (16px) của chính form.
   Wrapper `.d-grid .d-sm-block` vẫn giữ: dưới `sm` nút kéo hết chiều ngang cho dễ bấm.
 
-### Bật gửi form — CÒN MỘT BƯỚC BẠN PHẢI TỰ LÀM
+### Bật gửi form — access key nằm NGOÀI repo
 
-Form đã nối sẵn với Web3Forms nhưng **chưa chạy được** vì thiếu access key. Ba bước:
+Access key **không được commit**. Nó nằm trong `assets/js/config.js`, file này đã bị
+`.gitignore` chặn.
 
-1. Vào <https://web3forms.com>, nhập `xtandev@gmail.com` vào ô "Create Access Key".
-   Không cần tạo tài khoản — họ gửi key thẳng về hộp thư đó.
-2. Mở `index.html`, tìm dòng `name="access_key"`, thay `DAN-ACCESS-KEY-VAO-DAY`
-   bằng key vừa nhận.
-3. Gửi thử một lượt để chắc chắn thư về đúng hộp.
+Sau khi clone repo về máy mới:
 
-Trước khi làm xong bước 2, form sẽ **báo lỗi rõ ràng** chứ không giả vờ thành công — đây là
-chủ ý, xem phần dưới.
+```bash
+cp assets/js/config.example.js assets/js/config.js
+```
+
+rồi mở `config.js` và điền key thật:
+
+```js
+window.TP_CONFIG = { web3formsKey: 'key-cua-ban' };
+```
+
+Lấy key miễn phí tại <https://web3forms.com> — nhập `xtandev@gmail.com`, họ gửi key về hộp
+thư đó, không cần tạo tài khoản.
+
+Chưa có `config.js` thì form **báo lỗi rõ ràng** chứ không giả vờ gửi thành công.
+
+**Khi deploy:** nhớ upload cả `assets/js/config.js` lên hosting. File này không có trong
+repo nên các quy trình deploy tự động kéo từ Git sẽ không mang nó theo — phải thêm bằng biến
+môi trường hoặc upload tay.
 
 | Mục | Giá trị |
 |---|---|
 | Hạn mức miễn phí | 250 lượt/tháng, lưu lịch sử 30 ngày |
-| Nơi nhận | `xtandev@gmail.com` (gắn với access key, **không lộ trong HTML**) |
+| Nơi nhận | `xtandev@gmail.com` (gắn với access key, không xuất hiện trong mã nguồn) |
 | Endpoint | `https://api.web3forms.com/submit` (`app.js`, hằng `W3F_ENDPOINT`) |
 | Chống spam | honeypot `botcheck` (`.tp-hp`) — bot điền vào thì Web3Forms loại |
 
-**Access key nằm công khai trong HTML là đúng thiết kế**: nó chỉ ghi được, không đọc được dữ
-liệu đã gửi và không để lộ email nhận. Nhưng ai cũng có thể dùng key đó để bắn form, nên nếu
-bị spam thì vào bảng điều khiển Web3Forms bật hCaptcha hoặc giới hạn tên miền `tanpham.info`.
+### Điều cần hiểu rõ về access key
+
+Tách key khỏi repo giải quyết được việc **key bị lưu vĩnh viễn trong lịch sử Git công khai**,
+nơi bot chuyên quét GitHub có thể nhặt được.
+
+Nhưng nó **không giấu được key khỏi người xem site**. Web3Forms gọi API từ trình duyệt, nên
+bất kỳ ai mở DevTools trên site đã deploy đều đọc được key trong `config.js`. Đây là bản chất
+của mọi dịch vụ form chạy phía client, không phải thiếu sót của cách làm này.
+
+Key chỉ **ghi** được: không đọc được dữ liệu đã gửi, không lộ email nhận. Rủi ro thực tế là
+người khác dùng key để bắn form làm đầy hộp thư và đốt hạn mức 250 lượt/tháng. Cách chặn:
+
+1. Vào bảng điều khiển Web3Forms, giới hạn tên miền được phép gửi về `tanpham.info`.
+2. Bật hCaptcha nếu vẫn bị spam.
+
+Muốn key **không bao giờ** lộ ra trình duyệt thì phải bỏ Web3Forms và tự chạy một
+serverless function giữ key ở phía máy chủ — chỉ cần thay phần `fetch` trong `app.js` mục 7.
 
 ### Không bao giờ báo thành công khi chưa gửi được
 
